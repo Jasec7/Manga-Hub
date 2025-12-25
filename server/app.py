@@ -3,7 +3,7 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request
+from flask import request, jsonify, make_response
 from flask_restful import Resource
 
 # Local imports
@@ -17,6 +17,14 @@ from models import  Manga, MangaChapter, Chapter, Review
 @app.route('/')
 def index():
     return '<h1>Project Server</h1>'
+
+class Mangas(Resource):
+    def get(self):
+        mangas = [manga.to_dict() for manga in Manga.query.all()]
+
+        return make_response(jsonify(mangas), 200)
+    
+api.add_resource(Mangas,'/mangas')
 
 
 if __name__ == '__main__':

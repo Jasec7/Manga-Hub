@@ -16,7 +16,7 @@ class MangaChapter(db.Model, SerializerMixin):
     chapter = db.relationship("Chapter", back_populates="manga_chapters")
 
     def __repr__(self):
-        return f'<MangaChapter {self.id}, {self.chapter_number}> '
+        return f'<MangaChapter {self.id}, {self.chapter_number}, {self.manga.title}> '
 
 
 class Manga(db.Model, SerializerMixin):
@@ -55,7 +55,7 @@ class Review(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     reviewer = db.Column(db.String)
     comment = db.Column(db.String)
-    rating = db.Column(db.Integer)
+    rating = db.Column(db.Float)
     manga_id = db.Column(db.Integer, db.ForeignKey('mangas.id'))
 
     manga = db.relationship("Manga", back_populates="reviews")

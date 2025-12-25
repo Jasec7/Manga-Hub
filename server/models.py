@@ -28,7 +28,7 @@ class Manga(db.Model, SerializerMixin):
     release_year = db.Column(db.Integer)
 
     manga_chapters = db.relationship("MangaChapter", back_populates="manga", cascade="all, delete-orphan")
-    chapters = db.relationship("Chapter", secondary=MangaChapter.__table__, back_populates="mangas")
+    chapters = association_proxy('manga_chapters','chapter', creator=lambda chapter_obj: MangaChapter(chapter=chapter_obj))
     reviews = db.relationship("Review", back_populates="manga",cascade="all, delete-orphan")
 
 
@@ -43,7 +43,7 @@ class Chapter(db.Model, SerializerMixin):
     pages = db.Column(db.Integer)
 
     manga_chapters = db.relationship("MangaChapter", back_populates="chapter")
-    mangas = db.relationship("Manga", secondary=MangaChapter.__table__, back_populates="chapters")
+    mangas = association_proxy('manga_chapters', 'manga', creator=lambda manga_obj: MangaChapter(manga=manga_obj))
 
     def __repr__(self):
         return f'<Chapter {self.id}, {self.title}, {self.pages}> '

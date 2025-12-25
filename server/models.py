@@ -15,6 +15,8 @@ class MangaChapter(db.Model, SerializerMixin):
     manga = db.relationship("Manga", back_populates="manga_chapters")
     chapter = db.relationship("Chapter", back_populates="manga_chapters")
 
+    serialize_rules = ('-manga.manga_chapters', '-chapter.manga_chapters' ,)
+
     def __repr__(self):
         return f'<MangaChapter {self.id}, {self.chapter_number}, {self.manga.title}> '
 
@@ -30,7 +32,8 @@ class Manga(db.Model, SerializerMixin):
     manga_chapters = db.relationship("MangaChapter", back_populates="manga", cascade="all, delete-orphan")
     chapters = association_proxy('manga_chapters','chapter', creator=lambda chapter_obj: MangaChapter(chapter=chapter_obj))
     reviews = db.relationship("Review", back_populates="manga",cascade="all, delete-orphan")
-
+    
+    serialize_rules = ('-chapters.mangas', '-manga_chapters.manga', '-reviews.manga' ,)
 
     def __repr__(self):
         return f'<Manga {self.id}, {self.title}, {self.creator}, {self.release_year}> '
@@ -44,6 +47,8 @@ class Chapter(db.Model, SerializerMixin):
 
     manga_chapters = db.relationship("MangaChapter", back_populates="chapter")
     mangas = association_proxy('manga_chapters', 'manga', creator=lambda manga_obj: MangaChapter(manga=manga_obj))
+
+    serialize_rules = ('-mangas.chapters', '-manga_chapters.chapter' ,)
 
     def __repr__(self):
         return f'<Chapter {self.id}, {self.title}, {self.pages}> '
@@ -59,6 +64,8 @@ class Review(db.Model, SerializerMixin):
     manga_id = db.Column(db.Integer, db.ForeignKey('mangas.id'))
 
     manga = db.relationship("Manga", back_populates="reviews")
+
+    serialize_rules = ('-manga.reviews' ,)
 
     def __repr__(self):
         return f'<Review {self.id}, {self.reviewer}, {self.comment}, {self.rating}> '

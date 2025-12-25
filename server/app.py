@@ -23,8 +23,15 @@ class Mangas(Resource):
         mangas = [manga.to_dict() for manga in Manga.query.all()]
 
         return make_response(jsonify(mangas), 200)
+
+class MangaId(Resource):
+    def get(self, id):
+        manga = Manga.query.filter_by(id = id).first()
+
+        return make_response(jsonify(manga.to_dict()), 200)
     
 api.add_resource(Mangas,'/mangas')
+api.add_resource(MangaId,'/mangas/<int:id>')
 
 
 if __name__ == '__main__':

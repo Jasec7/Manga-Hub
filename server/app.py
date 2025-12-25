@@ -28,6 +28,9 @@ class MangaId(Resource):
     def get(self, id):
         manga = Manga.query.filter_by(id = id).first()
 
+        if not manga:
+            return {'error':'Manga not found'}, 404
+
         return make_response(jsonify(manga.to_dict()), 200)
     
 api.add_resource(Mangas,'/mangas')

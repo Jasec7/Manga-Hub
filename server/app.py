@@ -61,6 +61,38 @@ class Reviews(Resource):
     def get(self):
        reviews = [review.to_dict() for review in Review.query.all()]
        return make_response(reviews, 200)
+
+    def post(self):
+        data = request.get_json()
+
+        if 'reviewer' not in data or not data['reviewer'] or data['reviewer'].strip() == "":
+            return {'error':'Reviewer is required'}, 400
+        if 'comment' not in data or not data['comment'] or data['comment'].strip() == "":
+            return {'error':'A comment is required'}, 400
+        if 'rating' not in data:
+            return {'error':'Rating is required'}
+        if not isinstance(data['rating'],(int, float)):
+            return {'error':'It needs a rating'}
+        if data['rating'] <= 0 or data['rating'] > 5:
+            return {'error':'Rating must be between 1 and 5'}
+
+        manga = Manga.query.filter_by(id = data['manga_id']).first()
+
+        if not manga:
+            return {'error':'Manga not found'}, 404
+
+        new_review = Review(
+            reviewer = data['reviewer'],
+            comment = data['comment'],
+            rating = data['rating'],
+            manga_id = data['manga_id']
+        )
+        db.session.add(new_review)
+        db.session.commit()
+
+        return make_response(new_review.to_dict(), 201)
+
+
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')

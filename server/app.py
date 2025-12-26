@@ -59,10 +59,12 @@ class MangaId(Resource):
 
 class Reviews(Resource):
     def get(self):
-       pass
+       reviews = [review.to_dict() for review in Review.query.all()]
+       return make_response(reviews, 200)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')
+api.add_resource(Reviews,'/reviews')
 
 
 if __name__ == '__main__':

@@ -92,11 +92,34 @@ class Reviews(Resource):
 
         return make_response(new_review.to_dict(), 201)
 
+class ReviewsId(Resource):
+    def get(self, id):
+        review = Review.query.filter_by(id=id).first()
 
+        if not review:
+            return {'error':'Review not found'}, 404
+        
+        return make_response(review.to_dict(), 200)
+
+    def patch(self, id):
+        review = Review.query.filter_by(id=id).first()
+        data = request.get_json()
+        
+        if not review:
+            return {'error':'Review not found'}, 404
+
+        for attr in data:
+            setattr(review, attr, data.get(attr))
+
+        db.session.add(review)
+        db.session.commit()
+
+        return make_response(review.to_dict(), 202)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')
 api.add_resource(Reviews,'/reviews')
+api.add_resource(ReviewsId,'/reviews/<int:id>')
 
 
 if __name__ == '__main__':

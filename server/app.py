@@ -107,14 +107,34 @@ class ReviewsId(Resource):
         
         if not review:
             return {'error':'Review not found'}, 404
+        
+        if 'rating' in data:
+            if not isinstance(data['rating'],(int, float)):
+                return {'error':'It needs a rating'}, 400
+            if data['rating'] <= 0 or data['rating'] > 5:
+                return {'error':'Rating must be between 1 and 5'}, 400
 
-        for attr in data:
-            setattr(review, attr, data.get(attr))
+        fields = ['reviewer', 'comment', 'rating']
+
+        for key in data:
+            if key in fields:
+                setattr(review, key, data[key])
 
         db.session.add(review)
         db.session.commit()
 
         return make_response(review.to_dict(), 202)
+
+    def delete(self,id):
+        review = Review.query.filter_by(id=id).first()
+
+        if not review:
+            return {'error':'Review not found'}, 404
+
+        db.session.delete(review)
+        db.session.commit()
+
+        return make_response("", 204)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')

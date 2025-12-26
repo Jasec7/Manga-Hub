@@ -72,9 +72,9 @@ class Reviews(Resource):
         if 'rating' not in data:
             return {'error':'Rating is required'}
         if not isinstance(data['rating'],(int, float)):
-            return {'error':'It needs a rating'}
+            return {'error':'It needs a rating'}, 400
         if data['rating'] <= 0 or data['rating'] > 5:
-            return {'error':'Rating must be between 1 and 5'}
+            return {'error':'Rating must be between 1 and 5'}, 400
 
         manga = Manga.query.filter_by(id = data['manga_id']).first()
 

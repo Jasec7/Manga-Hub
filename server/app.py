@@ -22,7 +22,30 @@ class Mangas(Resource):
     def get(self):
         mangas = [manga.to_dict() for manga in Manga.query.all()]
 
-        return make_response(jsonify(mangas), 200)
+        return make_response(mangas, 200)
+
+    def post(self):
+        data = request.get_json()
+        
+        if 'title' not in data:
+            return {'error':'A title is required'}, 400
+        if 'creator' not in data:
+            return {'error':'A creator is required'}, 400
+        if 'release_year' not in data:
+            return {'error':'A release year is requires'}, 400
+
+        
+        new_manga = Manga(
+            title = data['title'],
+            creator = data['creator'],
+            release_year = data['release_year']
+        )
+        db.session.add(new_manga)
+        db.session.commit()
+        
+        return make_response(new_manga.to_dict(), 201 )
+
+
 
 class MangaId(Resource):
     def get(self, id):
@@ -31,7 +54,7 @@ class MangaId(Resource):
         if not manga:
             return {'error':'Manga not found'}, 404
 
-        return make_response(jsonify(manga.to_dict()), 200)
+        return make_response(manga.to_dict(), 200)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')

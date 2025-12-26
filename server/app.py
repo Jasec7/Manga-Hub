@@ -135,11 +135,17 @@ class ReviewsId(Resource):
         db.session.commit()
 
         return make_response("", 204)
+
+class Chapters(Resource):
+    def get(self):
+        chapters = [chapter.to_dict() for chapter in Chapter.query.all()]
+        return make_response(chapters, 200)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')
 api.add_resource(Reviews,'/reviews')
 api.add_resource(ReviewsId,'/reviews/<int:id>')
+api.add_resource(Chapters,'/chapters')
 
 
 if __name__ == '__main__':

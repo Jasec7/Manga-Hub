@@ -27,12 +27,14 @@ class Mangas(Resource):
     def post(self):
         data = request.get_json()
         
-        if 'title' not in data:
+        if 'title' not in data or not data['title'] or data['title'].strip() == "":
             return {'error':'A title is required'}, 400
-        if 'creator' not in data:
+        if 'creator' not in data or not data['creator'] or data['creator'].strip() == "":
             return {'error':'A creator is required'}, 400
         if 'release_year' not in data:
-            return {'error':'A release year is requires'}, 400
+            return {'error':'A release year is required'}, 400
+        if not isinstance(data['release_year'], int):
+            return {'error':'Release year must be an integer'}, 400
 
         
         new_manga = Manga(
@@ -46,7 +48,6 @@ class Mangas(Resource):
         return make_response(new_manga.to_dict(), 201 )
 
 
-
 class MangaId(Resource):
     def get(self, id):
         manga = Manga.query.filter_by(id = id).first()
@@ -55,6 +56,10 @@ class MangaId(Resource):
             return {'error':'Manga not found'}, 404
 
         return make_response(manga.to_dict(), 200)
+
+class Reviews(Resource):
+    def get(self):
+       pass
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')

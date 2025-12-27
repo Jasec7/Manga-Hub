@@ -165,7 +165,54 @@ class ChaptersId(Resource):
             return {'error':'Chapter not found'}, 404
         
         return make_response(chapter.to_dict(), 200)
+    
+class MangaChapters(Resource):
+    def get(self):
+        m_chapters = [m_chapter.to_dict() for m_chapter in MangaChapter.query.all()]
+        return make_response(m_chapters, 200)
+    
+    def post(self):
+        data = request.get_json()
 
+        if "chapter_number" not in data:
+            return {'error':'Field missing'}, 400
+        if not isinstance(data['chapter_number'], int):
+            return {'error':'Chapter number must be an integer'}, 400
+        if 'manga_id' not in data:
+            return {'error':'manga_id is required'}, 400
+        if 'chapter_id' not in data:
+            return {'error':'chapter_id is required'}, 400
+        
+        manga = Manga.query.filter_by(id=data['manga_id']).first()
+        if not manga:
+            return {'error':'Manga not found'}, 404
+        
+        chapter = Chapter.query.filter_by(id=data['chapter_id']).first()
+        if not chapter:
+            return {'error':'Chapter not found'}, 404
+
+        duplicate = MangaChapter.query.filter_by(manga_id = data['manga_id'], chapter_id = ['chapter_id']).first()
+        if duplicate:
+            return {'error':'This chapter is already linked in the chapters'}, 409
+        
+        new_manga_chapter = MangaChapter(
+            chapter_number = data['chapter_number'],
+            manga_id = data['manga_id'],
+            chapter_id = data['chapter_id']
+        )
+        db.session.add(new_manga_chapter)
+        db.session.commit()
+
+        return make_response(new_manga_chapter.to_dict(), 201)
+        
+class MangaChaptersId(Resource):
+    def get(self, id):
+        m_chapter = MangaChapter.query.filter_by(id=id).first()
+
+        if not m_chapter:
+            return {'error':'Not Found'}, 404
+        
+        return make_response(m_chapter.to_dict(), 200)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')
@@ -173,6 +220,8 @@ api.add_resource(Reviews,'/reviews')
 api.add_resource(ReviewsId,'/reviews/<int:id>')
 api.add_resource(Chapters,'/chapters')
 api.add_resource(ChaptersId,'/chapters/<int:id>')
+api.add_resource(MangaChapters,'/mangachapters')
+api.add_resource(MangaChaptersId,'/mangachapters/<int:id')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

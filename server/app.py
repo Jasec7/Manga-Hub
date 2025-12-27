@@ -141,14 +141,6 @@ class Chapters(Resource):
         chapters = [chapter.to_dict() for chapter in Chapter.query.all()]
         return make_response(chapters, 200)
     
-class ChaptersId(Resource):
-    def get(self, id):
-        chapter = Chapter.query.filter_by(id=id).first()
-        if not chapter:
-            return {'error':'Chapter not found'}, 404
-        
-        return make_response(chapter.to_dict(), 200)
-    
     def post(self):
         data = request.get_json()
 
@@ -165,6 +157,15 @@ class ChaptersId(Resource):
         )
         db.session.add(new_chapter)
         db.session.commit()
+    
+class ChaptersId(Resource):
+    def get(self, id):
+        chapter = Chapter.query.filter_by(id=id).first()
+        if not chapter:
+            return {'error':'Chapter not found'}, 404
+        
+        return make_response(chapter.to_dict(), 200)
+
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')

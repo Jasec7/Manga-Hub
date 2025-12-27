@@ -141,12 +141,37 @@ class Chapters(Resource):
         chapters = [chapter.to_dict() for chapter in Chapter.query.all()]
         return make_response(chapters, 200)
     
+class ChaptersId(Resource):
+    def get(self, id):
+        chapter = Chapter.query.filter_by(id=id).first()
+        if not chapter:
+            return {'error':'Chapter not found'}, 404
+        
+        return make_response(chapter.to_dict(), 200)
+    
+    def post(self):
+        data = request.get_json()
+
+        if 'title' not in data or data['title'].strip() == "":
+            return {'error':'A title is required'}, 400
+        if 'pages' not in data:
+            return {'error':'Pages are required'}, 400
+        if not isinstance(data['pages'], int):
+            return {'error':'Pages must be a number'}
+        
+        new_chapter = Chapter(
+            title = data['title'],
+            pages = data['pages']
+        )
+        db.session.add(new_chapter)
+        db.session.commit()
+    
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')
 api.add_resource(Reviews,'/reviews')
 api.add_resource(ReviewsId,'/reviews/<int:id>')
 api.add_resource(Chapters,'/chapters')
-
+api.add_resource(ChaptersId,'/chapters/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

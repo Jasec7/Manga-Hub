@@ -191,9 +191,9 @@ class MangaChapters(Resource):
         if not chapter:
             return {'error':'Chapter not found'}, 404
 
-        duplicate = MangaChapter.query.filter_by(manga_id = data['manga_id'], chapter_id = ['chapter_id']).first()
+        duplicate = MangaChapter.query.filter_by(manga_id = data['manga_id'], chapter_id = data['chapter_id']).first()
         if duplicate:
-            return {'error':'This chapter is already linked in the chapters'}, 409
+            return {'error':'This chapter is already linked to this mangas'}, 409
         
         new_manga_chapter = MangaChapter(
             chapter_number = data['chapter_number'],
@@ -213,6 +213,16 @@ class MangaChaptersId(Resource):
             return {'error':'Not Found'}, 404
         
         return make_response(m_chapter.to_dict(), 200)
+    
+    def delete(self, id):
+        m_chapter = MangaChapter.query.filter_by(id=id).first()
+        if not m_chapter:
+            return {'error':'MangaChapter not found'}, 404
+        
+        db.session.delete(m_chapter)
+        db.session.commit()
+
+        return make_response("", 204)
     
 api.add_resource(Mangas,'/mangas')
 api.add_resource(MangaId,'/mangas/<int:id>')

@@ -5,9 +5,10 @@ function MangaPage(){
 const [mangas, setMangas] = useState([])
 
 useEffect(() =>{
-    fetch("http://localhost:5555/mangas")
+    fetch("/mangas")
     .then(r => r.json())
-    .then(mangas => setMangas(mangas))
+    .then(data => {console.log("Fetched data", data);
+    setMangas(data)})
 },[])
 
 return(

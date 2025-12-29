@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import MangaList from "./MangaList"
+import MangaList from "./MangaList";
+import MangaForm from "./MangaForm";
 
 function MangaPage(){
 const [mangas, setMangas] = useState([])
@@ -11,8 +12,14 @@ useEffect(() =>{
     setMangas(data)})
 },[])
 
+
+function handleAddManga(newManga){
+    setMangas([...mangas, newManga])
+};
+
 return(
     <div className="App">
+    <MangaForm onAddMangas={handleAddManga}/>
     <MangaList mangas={mangas} />
     </div>
     )

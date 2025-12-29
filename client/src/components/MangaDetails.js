@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 
-function MangaDetails({title, creator, release_year}){
+function MangaDetails({manga}){
     return(
         <div className="details">
             <br/>
-            <h2>{title}</h2>
-            <p>{creator}</p>
-            <p>{release_year}</p>
+            <h2>{manga.title}</h2>
+            <p>{manga.creator}</p>
+            <p>{manga.release_year}</p>
+            <p>Reviews: {manga.reviews.length}</p>
         </div>
     )
 };

@@ -6,11 +6,7 @@ function MangaList({mangas}){
     return(
         <div className="card">
             {mangas.map((manga)=>(
-                <MangaDetails key={manga.id}
-                id={manga.id}
-                title={manga.title}
-                creator={manga.creator}
-                release_year={manga.release_year}/>
+                <MangaDetails key ={manga.id} manga={manga}/>
             ))}
         </div>
     )

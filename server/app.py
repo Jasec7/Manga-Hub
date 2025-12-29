@@ -59,7 +59,7 @@ class MangaId(Resource):
 
 class Reviews(Resource):
     def get(self):
-       reviews = [review.to_dict() for review in Review.query.all()]
+       reviews = [review.to_dict(only=('id','reviewer','comment','rating')) for review in Review.query.all()]
        return make_response(reviews, 200)
 
     def post(self):
@@ -138,7 +138,7 @@ class ReviewsId(Resource):
 
 class Chapters(Resource):
     def get(self):
-        chapters = [chapter.to_dict() for chapter in Chapter.query.all()]
+        chapters = [chapter.to_dict(only=('id','title','pages')) for chapter in Chapter.query.all()]
         return make_response(chapters, 200)
     
     def post(self):
@@ -231,7 +231,7 @@ api.add_resource(ReviewsId,'/reviews/<int:id>')
 api.add_resource(Chapters,'/chapters')
 api.add_resource(ChaptersId,'/chapters/<int:id>')
 api.add_resource(MangaChapters,'/mangachapters')
-api.add_resource(MangaChaptersId,'/mangachapters/<int:id')
+api.add_resource(MangaChaptersId,'/mangachapters/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

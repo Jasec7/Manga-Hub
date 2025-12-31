@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Review from "./Review";
 
 function MangaDetails({manga}){
     return(
@@ -8,6 +9,14 @@ function MangaDetails({manga}){
             <p>{manga.creator}</p>
             <p>{manga.release_year}</p>
             <p>Reviews: {manga.reviews.length}</p>
+             {manga.reviews.map((review) =>(
+                <Review key ={review.id}
+                id={review.id}
+                reviewer={review.reviewer}
+                comment={review.comment}
+                rating={review.rating} />
+
+             ))}
         </div>
     )
 };

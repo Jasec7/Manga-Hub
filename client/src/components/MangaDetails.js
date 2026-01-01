@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import React, {useState} from 'react';
 import Review from "./Review";
 import ReviewForm from "./ReviewForm";
+import ChapterForm from "./ChapterForm";
+import Chapter from "./Chapter";
 
 function MangaDetails({manga}){
     const [mangaData, setMangaData] = useState(manga)
@@ -9,14 +11,26 @@ function MangaDetails({manga}){
     function handleReview(newReview){
         setMangaData({...mangaData,
             reviews:[...mangaData.reviews, newReview]
-        })
+        });
     };
+    function handleAddChapter(newChapter){
+        setMangaData({...mangaData,
+            chapters:[...mangaData.chapters, newChapter]
+        });
+    }
     return(
         <div className="details">
             <br/>
             <h2>{manga.title}</h2>
             <p>{manga.creator}</p>
             <p>{manga.release_year}</p>
+            <p>Chapters</p>
+            {mangaData.chapters.map((chapter) =>(
+                <Chapter key={chapter.id}
+                id={chapter.id}
+                title={chapter.title}
+                pages={chapter.pages}
+                chapter_number={chapter.chapter_number}/>))}
             <p>Reviews: {mangaData.reviews.length}</p>
              {mangaData.reviews.map((review) =>(
                 <Review key ={review.id}
@@ -25,6 +39,8 @@ function MangaDetails({manga}){
                 comment={review.comment}
                 rating={review.rating} />
              ))}
+             <ChapterForm onAddChapter={handleAddChapter}
+              manga_id={manga.id}/>
              <ReviewForm onAddReview={handleReview}
               manga_id={manga.id} />
         </div>

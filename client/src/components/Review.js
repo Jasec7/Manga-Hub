@@ -1,4 +1,4 @@
-import MangaDetails from "./MangaDetails"
+
 
 function Review({id, reviewer, comment, rating}){
     return(

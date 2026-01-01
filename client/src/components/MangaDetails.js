@@ -25,7 +25,8 @@ function MangaDetails({manga}){
                 comment={review.comment}
                 rating={review.rating} />
              ))}
-             <ReviewForm onAddReview={handleReview} />
+             <ReviewForm onAddReview={handleReview}
+              manga_id={manga.id} />
         </div>
     )
 };

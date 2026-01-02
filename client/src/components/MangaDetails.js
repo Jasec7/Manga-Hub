@@ -21,9 +21,9 @@ function MangaDetails({manga}){
     return(
         <div className="details">
             <br/>
-            <h2>{manga.title}</h2>
-            <p>{manga.creator}</p>
-            <p>{manga.release_year}</p>
+            <h2>{mangaData.title}</h2>
+            <p>{mangaData.creator}</p>
+            <p>{mangaData.release_year}</p>
             <p>Chapters</p>
             {mangaData.chapters.map((chapter) =>(
                 <Chapter key={chapter.id}
@@ -40,9 +40,9 @@ function MangaDetails({manga}){
                 rating={review.rating} />
              ))}
              <ChapterForm onAddChapter={handleAddChapter}
-              manga_id={manga.id}/>
+              manga_id={mangaData.id}/>
              <ReviewForm onAddReview={handleReview}
-              manga_id={manga.id} />
+              manga_id={mangaData.id} />
         </div>
     )
 };

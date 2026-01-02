@@ -20,8 +20,8 @@ function ReviewForm({onAddReview, manga_id}){
         .then((r)=> r.json())
         .then((newReview) => {onAddReview(newReview);
             setFormData({reviewer:"", comment:"", rating:""})
-        })
-    }
+        });
+    };
     return(
         <div className="new-review-form">
         <h4>New review</h4>

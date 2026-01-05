@@ -8,8 +8,7 @@ const [mangas, setMangas] = useState([])
 useEffect(() =>{
     fetch("/mangas")
     .then(r => r.json())
-    .then(data => {console.log("Fetched data", data);
-    setMangas(data)})
+    .then(mangas => setMangas(mangas))
 },[])
 
 

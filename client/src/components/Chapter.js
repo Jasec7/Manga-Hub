@@ -1,12 +1,13 @@
 
-function Chapter({title, pages, chapter_number}){
-    return(
-        <div>
-            <h4>{title}</h4>
-            <p>Pages:{pages}</p>
-            <p>{chapter_number}</p>
-        </div>
-    )
+function Chapter({ mangachapter }) {
+  return (
+    <div>
+      <h3>
+        Chapter {mangachapter.chapter_number}: {mangachapter.chapter.title}
+      </h3>
+      <p>Pages: {mangachapter.chapter.pages}</p>
+    </div>
+  );
 }
 
 export default Chapter;

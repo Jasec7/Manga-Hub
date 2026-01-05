@@ -20,7 +20,7 @@ function ChapterForm({onAddChapter, manga_id}){
             body:JSON.stringify({title:formData.title, pages:parseInt(page), chapter_number:parseInt(chapter_n), manga_id:manga_id})
         })
         .then((r) => r.json())
-        .then((newChapter) => {onAddChapter(newChapter);
+        .then((newMChapter) => {onAddChapter(newMChapter);
             setFormData({title:"", pages:"", chapter_number:""})
         });
     };

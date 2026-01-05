@@ -7,31 +7,39 @@ import Chapter from "./Chapter";
 
 function MangaDetails({manga}){
     const [mangaData, setMangaData] = useState(manga)
-
+    console.log("Data:", mangaData)
     function handleReview(newReview){
         setMangaData({...mangaData,
             reviews:[...mangaData.reviews, newReview]
         });
     };
-    function handleAddChapter(newChapter){
+   function handleAddMChapter(newMChapter){
         setMangaData({...mangaData,
-            chapters:[...mangaData.chapters, newChapter]
+            manga_chapters:[...mangaData.manga_chapters, newMChapter]
         });
     }
-    return(
+    
+    if(!mangaData.reviews || !mangaData.manga_chapters){
+        return null;
+    }
+
+    return(  
         <div className="details">
             <br/>
             <h2>{mangaData.title}</h2>
             <p>{mangaData.creator}</p>
             <p>{mangaData.release_year}</p>
-            <p>Chapters</p>
-            {mangaData.chapters.map((chapter) =>(
-                <Chapter key={chapter.id}
-                id={chapter.id}
-                title={chapter.title}
-                pages={chapter.pages}
-                chapter_number={chapter.chapter_number}/>))}
-            <p>Reviews: {mangaData.reviews.length}</p>
+
+            <h2>Chapters</h2>
+            {mangaData.manga_chapters.map((mangachapter) =>
+                {if(!mangachapter || !mangachapter.chapter) return null; 
+            return( 
+                <Chapter key={mangachapter.id} 
+                manga_chapter={mangachapter} />);
+                })}
+                
+                
+            <p>Reviews: ({mangaData.reviews.length})</p>
              {mangaData.reviews.map((review) =>(
                 <Review key ={review.id}
                 id={review.id}
@@ -39,10 +47,10 @@ function MangaDetails({manga}){
                 comment={review.comment}
                 rating={review.rating} />
              ))}
-             <ChapterForm onAddChapter={handleAddChapter}
-              manga_id={mangaData.id}/>
+             <ChapterForm onAddChapter={handleAddMChapter}
+             manga_id={mangaData.id}/>
              <ReviewForm onAddReview={handleReview}
-              manga_id={mangaData.id} />
+             manga_id={mangaData.id} />
         </div>
     )
 };

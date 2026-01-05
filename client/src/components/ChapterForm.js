@@ -1,28 +1,19 @@
 import React, {useState} from 'react';
 
-function ChapterForm({onAddChapter, manga_id}){
-    const [formData, setFormData] = useState({
-        title:"",
-        pages:"",
-        chapter_number:""
-    });
+function ChapterForm({onUpdate, manga_id}){
+    function handleSubmit(e) {
+    e.preventDefault();
 
-    function handleSubmit(e){
-        e.preventDefault();
-        const page = parseInt(formData.pages)
-        const chapter_n = parseInt(formData.chapter_number)
-
-        fetch("/chapters", {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({title:formData.title, pages:parseInt(page), chapter_number:parseInt(chapter_n), manga_id:manga_id})
-        })
-        .then((r) => r.json())
-        .then((newMChapter) => {onAddChapter(newMChapter);
-            setFormData({title:"", pages:"", chapter_number:""})
-        });
+    fetch("/manga_chapters", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        manga_id,
+        chapter_id,
+        chapter_number
+      })
+    }).then(() => onUpdate());
+        
     };
 
     return(

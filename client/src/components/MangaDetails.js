@@ -8,20 +8,14 @@ import Chapter from "./Chapter";
 function MangaDetails({manga}){
     const [mangaData, setMangaData] = useState(manga)
     console.log("Data:", mangaData)
-    function handleReview(newReview){
-        setMangaData({...mangaData,
-            reviews:[...mangaData.reviews, newReview]
-        });
-    };
-   function handleAddMChapter(newMChapter){
-        setMangaData({...mangaData,
-            manga_chapters:[...mangaData.manga_chapters, newMChapter]
-        });
+
+    function refetchManga() {
+    fetch(`/mangas/${manga.id}`)
+      .then(r => r.json())
+      .then(updatedManga => setMangaData(updatedManga));
     }
-    
-    if(!mangaData.reviews || !mangaData.manga_chapters){
-        return null;
-    }
+
+
 
     return(  
         <div className="details">
@@ -31,13 +25,9 @@ function MangaDetails({manga}){
             <p>{mangaData.release_year}</p>
 
             <h2>Chapters</h2>
-            {mangaData.manga_chapters.map((mangachapter) =>
-                {if(!mangachapter || !mangachapter.chapter) return null; 
-            return( 
+            {mangaData.manga_chapters.map((mangachapter) =>(
                 <Chapter key={mangachapter.id} 
-                manga_chapter={mangachapter} />);
-                })}
-                
+                manga_chapter={mangachapter} /> ))}
                 
             <p>Reviews: ({mangaData.reviews.length})</p>
              {mangaData.reviews.map((review) =>(
@@ -47,9 +37,9 @@ function MangaDetails({manga}){
                 comment={review.comment}
                 rating={review.rating} />
              ))}
-             <ChapterForm onAddChapter={handleAddMChapter}
+             <ChapterForm onUpdate={refetchManga}
              manga_id={mangaData.id}/>
-             <ReviewForm onAddReview={handleReview}
+             <ReviewForm onUpdate={refetchManga}
              manga_id={mangaData.id} />
         </div>
     )

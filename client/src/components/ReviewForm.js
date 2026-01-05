@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-function ReviewForm({onAddReview, manga_id}){
+function ReviewForm({onUpdate, manga_id}){
     const [formData, setFormData] = useState({
         reviewer:"",
         comment:"",
@@ -19,7 +19,7 @@ function ReviewForm({onAddReview, manga_id}){
         })
         .then((r)=> r.json())
         .then((newReview) => {onAddReview(newReview);
-            setFormData({reviewer:"", comment:"", rating:""})
+            setFormData({reviewer:"", comment:"", rating:""}); onUpdate()
         });
     };
     return(

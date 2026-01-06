@@ -1,11 +1,12 @@
 
-function Chapter({ mangachapter }) {
+function Chapter({ manga_chapter }) {
+  console.log(manga_chapter)
   return (
     <div>
       <h3>
-        Chapter {mangachapter.chapter_number}: {mangachapter.chapter.title}
+        Chapter {manga_chapter.chapter_number}: {manga_chapter.chapter.title}
       </h3>
-      <p>Pages: {mangachapter.chapter.pages}</p>
+      <p>Pages:{manga_chapter.chapter.pages}</p>
     </div>
   );
 }

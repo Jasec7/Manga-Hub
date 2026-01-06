@@ -8,6 +8,7 @@ import Chapter from "./Chapter";
 function MangaDetails({manga}){
     const [mangaData, setMangaData] = useState(manga)
     console.log("Data:", mangaData)
+    
 
     function refetchManga() {
     fetch(`/mangas/${manga.id}`)
@@ -15,8 +16,10 @@ function MangaDetails({manga}){
       .then(updatedManga => setMangaData(updatedManga));
     }
 
-
-
+    if(!mangaData || !mangaData.manga_chapters){
+        return null;
+    }
+    
     return(  
         <div className="details">
             <br/>
@@ -25,9 +28,9 @@ function MangaDetails({manga}){
             <p>{mangaData.release_year}</p>
 
             <h2>Chapters</h2>
-            {mangaData.manga_chapters.map((mangachapter) =>(
-                <Chapter key={mangachapter.id} 
-                manga_chapter={mangachapter} /> ))}
+            {mangaData.manga_chapters.map((manga_chapter) =>(
+                <Chapter key={manga_chapter.id} 
+                manga_chapter={manga_chapter} /> ))}
                 
             <p>Reviews: ({mangaData.reviews.length})</p>
              {mangaData.reviews.map((review) =>(

@@ -1,6 +1,6 @@
 
 function Chapter({ manga_chapter }) {
-  console.log(manga_chapter)
+  console.log(manga_chapter[1])
   return (
     <div>
       <h3>

@@ -21,7 +21,7 @@ function ChapterForm({ manga_id, onUpdate }) {
     })
       .then((r) => r.json())
       .then((newChapter) => {
-        return fetch("/manga_chapters", {
+        return fetch("/mangachapters", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

@@ -157,6 +157,8 @@ class Chapters(Resource):
         )
         db.session.add(new_chapter)
         db.session.commit()
+        
+        return make_response(new_chapter.to_dict(), 201)
     
 class ChaptersId(Resource):
     def get(self, id):

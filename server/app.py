@@ -56,6 +56,17 @@ class MangaId(Resource):
             return {'error':'Manga not found'}, 404
 
         return make_response(manga.to_dict(), 200)
+    
+    def delete(self, id):
+        manga = Manga.query.filter_by(id=id).first()
+
+        if not manga:
+            return {'error':'Manga not found'}, 404
+        
+        db.session.delete(manga)
+        db.session.commit()
+
+        return make_response("", 204)
 
 class Reviews(Resource):
     def get(self):
@@ -167,6 +178,13 @@ class ChaptersId(Resource):
             return {'error':'Chapter not found'}, 404
         
         return make_response(chapter.to_dict(), 200)
+    
+    def delete(self, id):
+        chapter = Chapter.query.filter_by(id=id).first()
+
+        db.session.delete(chapter)
+        db.session.commit()
+        return make_response("", 204)
     
 class MangaChapters(Resource):
     def get(self):

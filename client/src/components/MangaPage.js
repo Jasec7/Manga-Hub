@@ -16,10 +16,20 @@ function handleAddManga(newManga){
     setMangas([...mangas, newManga])
 };
 
+const handleDelete = (id) =>{
+    fetch(`/mangas/${id}`,{
+        method:"DELETE"
+    })
+    .then(() =>{
+        const deleteManga = mangas.filter((manga) => manga.id !== id);
+        setMangas(deleteManga)
+    })
+}
+
 return(
     <div className="App">
     <MangaForm onAddMangas={handleAddManga}/>
-    <MangaList mangas={mangas} />
+    <MangaList mangas={mangas} onDelete={handleDelete}/>
     </div>
     )
 }

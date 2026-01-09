@@ -5,7 +5,7 @@ import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
 import Chapter from "./Chapter";
 
-function MangaDetails({manga}){
+function MangaDetails({manga, onDelete}){
     const [mangaData, setMangaData] = useState(manga)
     console.log("Data:", mangaData)
     
@@ -26,7 +26,7 @@ function MangaDetails({manga}){
             <h2>{mangaData.title}</h2>
             <p>{mangaData.creator}</p>
             <p>{mangaData.release_year}</p>
-
+            <button onClick={() => onDelete(mangaData.id)}>Delete</button>
             <h2>Chapters</h2>
             {mangaData.manga_chapters.map((manga_chapter) =>(
                 <Chapter key={manga_chapter.id} 

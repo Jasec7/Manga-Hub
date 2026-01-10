@@ -18,7 +18,21 @@ function MangaDetails({manga, onDelete}){
 
     if(!mangaData || !mangaData.manga_chapters){
         return null;
-    }
+    };
+
+    const handleDelete = (id) => {
+        fetch(`/reviews/${id}`,{
+            method:"DELETE"
+        })
+        .then(() => refetchManga())
+    };
+
+    const handleChapterDelete = (id) => {
+        fetch(`/mangachapters/${id}`,{
+            method:"DELETE"
+        })
+        .then(() => refetchManga())
+    };
     
     return(  
         <div className="details">
@@ -30,7 +44,9 @@ function MangaDetails({manga, onDelete}){
             <h2>Chapters</h2>
             {mangaData.manga_chapters.map((manga_chapter) =>(
                 <Chapter key={manga_chapter.id} 
-                manga_chapter={manga_chapter} /> ))}
+                manga_chapter={manga_chapter}
+                onDelete={handleChapterDelete} 
+                /> ))}
                 
             <p>Reviews: ({mangaData.reviews.length})</p>
              {mangaData.reviews.map((review) =>(
@@ -38,7 +54,8 @@ function MangaDetails({manga, onDelete}){
                 id={review.id}
                 reviewer={review.reviewer}
                 comment={review.comment}
-                rating={review.rating} />
+                rating={review.rating}
+                onDelete={handleDelete} />
              ))}
              <ChapterForm onUpdate={refetchManga}
              manga_id={mangaData.id}/>

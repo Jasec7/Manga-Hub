@@ -1,5 +1,5 @@
 
-function Chapter({ manga_chapter }) {
+function Chapter({ manga_chapter, onDelete }) {
   console.log(manga_chapter[1])
   return (
     <div>
@@ -7,6 +7,7 @@ function Chapter({ manga_chapter }) {
         Chapter {manga_chapter.chapter_number}: {manga_chapter.chapter.title}
       </h3>
       <p>Pages:{manga_chapter.chapter.pages}</p>
+      <button onClick={() => onDelete(manga_chapter.id)}>Delete</button>
     </div>
   );
 }

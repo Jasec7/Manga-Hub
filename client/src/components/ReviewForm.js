@@ -1,60 +1,76 @@
 import React, {useState} from "react";
+import { useFormik } from 'formik';
+import * as yup from "yup";
 
-function ReviewForm({ onUpdate, manga_id }) {
-  const [formData, setFormData] = useState({
-    reviewer: "",
-    comment: "",
-    rating: ""
+ const formSchema = yup.object().shape({
+    reviewer: yup.string().required("Must enter a reviewer name"),
+    comment: yup.string().required("A comment is required"),
+    rating: yup
+      .number()
+      .positive()
+      .integer()
+      .required("it needs a rating")
+      .typeError("Please enter an Integer")
+      .min(1)
+      .max(5),
   });
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    fetch("/reviews", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        reviewer: formData.reviewer,
-        comment: formData.comment,
-        rating: Number(formData.rating),
-        manga_id: manga_id
+const ReviewForm = ({manga_id, onUpdate}) =>{
+  const formik = useFormik({
+    initialValues:{
+      reviewer:"",
+      comment:"",
+      rating:"",
+    },
+    validationSchema:formSchema,
+    onSubmit:(values) =>{
+      fetch("/reviews",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({...values,manga_id:manga_id})
+      }).then((res) =>{
+       if(res.status == 200){
+         formik.resetForm();
+        onUpdate();
+       }
       })
-    }).then(() => {
-      setFormData({ reviewer: "", comment: "", rating: "" });
-      onUpdate(); 
-    });
-  }
+    }
+  })
+
 
   return (
     <div className="new-review-form">
       <h4>New Review</h4>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
         <input
           type="text"
+          name="reviewer"
           placeholder="Reviewer"
-          value={formData.reviewer}
-          onChange={(e) =>
-            setFormData({ ...formData, reviewer: e.target.value })
-          }
+          value={formik.values.reviewer}
+          onChange={formik.handleChange}
+          onblur={formik.handleBlur}
         />
+        {formik.touched.reviewer && formik.errors.reviewer}
         <input
           type="text"
+          name="comment"
           placeholder="Comment"
-          value={formData.comment}
-          onChange={(e) =>
-            setFormData({ ...formData, comment: e.target.value })
-          }
+          value={formik.values.comment}
+          onChange={formik.handleChange}
+           onblur={formik.handleBlur}
         />
+        {formik.errors.comment}
         <input
           type="number"
+          name="rating"
           placeholder="Rating"
-          value={formData.rating}
-          onChange={(e) =>
-            setFormData({ ...formData, rating: e.target.value })
-          }
+          value={formik.values.rating}
+          onChange={formik.handleChange}
+          onblur={formik.handleBlur}
         />
+        {formik.errors.rating}
         <button type="submit">Add Review</button>
       </form>
     </div>

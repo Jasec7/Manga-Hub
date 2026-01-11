@@ -31,7 +31,7 @@ const ReviewForm = ({manga_id, onUpdate}) =>{
         },
         body:JSON.stringify({...values,manga_id:manga_id})
       }).then((res) =>{
-       if(res.status == 200){
+       if(res.status === 201){
          formik.resetForm();
         onUpdate();
        }
@@ -50,7 +50,7 @@ const ReviewForm = ({manga_id, onUpdate}) =>{
           placeholder="Reviewer"
           value={formik.values.reviewer}
           onChange={formik.handleChange}
-          onblur={formik.handleBlur}
+          onBlur={formik.handleBlur}
         />
         {formik.touched.reviewer && formik.errors.reviewer}
         <input
@@ -59,18 +59,18 @@ const ReviewForm = ({manga_id, onUpdate}) =>{
           placeholder="Comment"
           value={formik.values.comment}
           onChange={formik.handleChange}
-           onblur={formik.handleBlur}
+          onBlur={formik.handleBlur}
         />
-        {formik.errors.comment}
+        {formik.touched.comment && formik.errors.comment}
         <input
           type="number"
           name="rating"
           placeholder="Rating"
           value={formik.values.rating}
           onChange={formik.handleChange}
-          onblur={formik.handleBlur}
+          onBlur={formik.handleBlur}
         />
-        {formik.errors.rating}
+        {formik.touched.rating && formik.errors.rating}
         <button type="submit">Add Review</button>
       </form>
     </div>

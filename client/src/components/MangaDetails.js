@@ -20,7 +20,7 @@ function MangaDetails({manga, onDelete}){
         return null;
     };
 
-    const handleDelete = (id) => {
+    const handleReviewDelete = (id) => {
         fetch(`/reviews/${id}`,{
             method:"DELETE"
         })
@@ -55,7 +55,7 @@ function MangaDetails({manga, onDelete}){
                 reviewer={review.reviewer}
                 comment={review.comment}
                 rating={review.rating}
-                onDelete={handleDelete} />
+                onDelete={handleReviewDelete} />
              ))}
              <ChapterForm onUpdate={refetchManga}
              manga_id={mangaData.id}/>

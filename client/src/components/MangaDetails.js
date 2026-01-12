@@ -27,6 +27,13 @@ function MangaDetails({manga, onDelete}){
         .then(() => refetchManga())
     };
 
+    const handleChapterDelete = (id) =>{
+        fetch(`/mangachapters/${id}`,{
+            method:"DELETE"
+        })
+        .then(() => refetchManga())
+    };
+
     const handleUpdateReview = (id, {reviewer, comment, rating}) =>{
         fetch(`/reviews/${id}`,{
             method:"PATCH",
@@ -36,18 +43,14 @@ function MangaDetails({manga, onDelete}){
             body:JSON.stringify({reviewer, comment, rating})
         })
         .then((res) => {
-          if (res.ok) {
+          if(res.ok){
             refetchManga()
-          }   
-    });
-
-    const handleChapterDelete = (id) => {
-        fetch(`/mangachapters/${id}`,{
-            method:"DELETE"
+          }
         })
-        .then(() => refetchManga())
-    };
+    }   
     
+
+  
     return(  
         <div className="details">
             <br/>
@@ -77,8 +80,6 @@ function MangaDetails({manga, onDelete}){
              <ReviewForm onUpdate={refetchManga}
              manga_id={mangaData.id} />
         </div>
-    )
+    ) 
 }
-}
-
 export default MangaDetails

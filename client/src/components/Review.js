@@ -6,7 +6,7 @@ function Review({id, reviewer, comment, rating, onDelete, onReview}){
             <h4>{reviewer}</h4>
             <p>{comment}</p>
             <p>Rating: {rating}</p>
-            <button onClick={() => onReview(id)}>Edit</button>
+            <button onClick={() => onReview(id, reviewer, comment, rating)}>Edit</button>
             <button onClick={() => onDelete(id)}>Delete</button>
         </div>
     )

@@ -8,9 +8,8 @@ import * as yup from "yup";
     rating: yup
       .number()
       .positive()
-      .integer()
-      .required("it needs a rating")
-      .typeError("Please enter an Integer")
+      .required("It needs a rating")
+      .typeError("Invalid rating ")
       .min(1)
       .max(5),
   });

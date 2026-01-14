@@ -7,6 +7,7 @@ import Chapter from "./Chapter";
 
 function MangaDetails({manga, onDelete}){
     const [mangaData, setMangaData] = useState(manga)
+    const [isToggle, setIstoggle] = useState(false);
     console.log("Data:", mangaData)
     
 
@@ -32,6 +33,10 @@ function MangaDetails({manga, onDelete}){
             method:"DELETE"
         })
         .then(() => refetchManga())
+    };
+
+    function handleToggle(){
+        setIstoggle(!isToggle)
     };
 
     const handleUpdateReview = (id, {reviewer, comment, rating}) =>{
@@ -66,7 +71,10 @@ function MangaDetails({manga, onDelete}){
                 /> ))}
                 
             <p>Reviews: ({mangaData.reviews.length})</p>
-             {mangaData.reviews.map((review) =>(
+            <button onClick={handleToggle}>
+                {isToggle ? 'Hide review' : 'Show review'}
+            </button>
+             {isToggle &&(mangaData.reviews.map((review) =>(
                 <Review key ={review.id}
                 id={review.id}
                 reviewer={review.reviewer}
@@ -74,7 +82,7 @@ function MangaDetails({manga, onDelete}){
                 rating={review.rating}
                 onDelete={handleReviewDelete} 
                 onReview={handleUpdateReview}/>
-             ))}
+             )))}
              <ChapterForm onUpdate={refetchManga}
              manga_id={mangaData.id}/>
              <ReviewForm onUpdate={refetchManga}

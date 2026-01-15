@@ -38,14 +38,15 @@ function MangaDetails({manga, onDelete}){
     function handleToggle(){
         setIstoggle(!isToggle)
     };
-
+   
     const handleUpdateReview = (id, {reviewer, comment, rating}) =>{
+        console.log("PATCH payload:", { reviewer, comment, rating });
         fetch(`/reviews/${id}`,{
             method:"PATCH",
             headers:{
                 "Content-Type":"application/json",
             },
-            body:JSON.stringify({reviewer, comment, rating})
+            body:JSON.stringify({reviewer, comment, rating:Number(rating)})
         })
         .then((res) => {
           if(res.ok){

@@ -4,14 +4,14 @@ function NavBar(){
     return(
         <nav>
             <NavLink
-            to='/'
+            exact to='/'
             className='nav-link'
             >
                 Home
             </NavLink>
 
             <NavLink
-            to='/mangas'
+            exact to='/mangas'
             className='nav-link'
             >
                 Mangas

@@ -12,7 +12,6 @@ function MangaDetails({onDelete}){
     const [isToggle, setIstoggle] = useState(false);
     const {id} = useParams();
     const history = useHistory();
-    console.log("Data:", mangaData)
 
     useEffect(() =>{
         fetch(`/mangas/${id}`)
@@ -72,10 +71,8 @@ function MangaDetails({onDelete}){
             refetchManga()
           }
         })
-    }   
-    
+    };  
 
-        console.log(onDelete)
     return(  
         <div className="details">
             <br/>

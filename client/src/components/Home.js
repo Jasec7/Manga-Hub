@@ -3,7 +3,7 @@
 function Home(){
     return(
         <div>
-            <h1>Welmcome to Manga Hub</h1>
+            <h1>Welcome to Manga Hub</h1>
         </div>
     )
 }

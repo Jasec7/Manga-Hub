@@ -1,6 +1,6 @@
 
 function Chapter({ manga_chapter, onDelete }) {
-  console.log([manga_chapter])
+  
   return (
     <div>
       <h3>

@@ -40,7 +40,8 @@ class Mangas(Resource):
         new_manga = Manga(
             title = data['title'],
             creator = data['creator'],
-            release_year = data['release_year']
+            release_year = data['release_year'],
+            image_url =data['image_url']
         )
         db.session.add(new_manga)
         db.session.commit()

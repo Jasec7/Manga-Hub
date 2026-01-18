@@ -28,6 +28,7 @@ class Manga(db.Model, SerializerMixin):
     title = db.Column(db.String)
     creator = db.Column(db.String)
     release_year = db.Column(db.Integer)
+    image_url = db.Column(db.String)
 
     manga_chapters = db.relationship("MangaChapter", back_populates="manga", cascade="all, delete-orphan")
     chapters = association_proxy('manga_chapters','chapter', creator=lambda chapter_obj: MangaChapter(chapter=chapter_obj))

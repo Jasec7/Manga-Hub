@@ -25,10 +25,10 @@ if __name__ == '__main__':
         Review.query.delete()
 
         print("creating mangas...")
-        m1 = Manga(title = 'Jujutsu Kaisen', creator = "Gege Akutami", release_year = 2018)
-        m2 = Manga(title = 'Hunter x Hunter', creator = 'Yoshihiro Toashi', release_year = 1998)
-        m3 = Manga(title = 'Dragon Ball Z', creator = "akira Toriyama", release_year = 1988)
-        m4 = Manga(title = "One Punch Man", creator = "One", release_year = 2009)
+        m1 = Manga(title = 'Jujutsu Kaisen', creator = "Gege Akutami", release_year = 2018, image_url ='https://www.netguruindia.com/wp-content/uploads/2026/01/fHpKWq9ayzSk8nSwqRuaAUemRKh-300x450.jpg')
+        m2 = Manga(title = 'Hunter x Hunter', creator = 'Yoshihiro Toashi', release_year = 1998, image_url = 'https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/10/hunter-x-hunter.jpg')
+        m3 = Manga(title = 'Dragon Ball Z', creator = "Akira Toriyama", release_year = 1988, image_url ='https://picfiles.alphacoders.com/258/258566.jpg')
+        m4 = Manga(title = "One Punch Man", creator = "One", release_year = 2009, image_url ='https://mlpnk72yciwc.i.optimole.com/cqhiHLc.IIZS~2ef73/w:auto/h:auto/q:75/https://bleedingcool.com/wp-content/uploads/2025/03/one-punch-man-s3-kv3.jpg')
         mangas = [m1, m2, m3, m4]
 
         print("creating chapters...")

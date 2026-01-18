@@ -28,6 +28,17 @@
   color: rgb(255, 145, 0);
 }
 
+.manga-image{
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.details img {
+  display:block;
+  margin-bottom: 10px;
+}
+
 body {
   background-color :bisque;
   padding: 20px;

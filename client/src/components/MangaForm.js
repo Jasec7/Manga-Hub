@@ -19,6 +19,7 @@ const formSchema = yup.object().shape({
             title:"",
             creator:"",
             release_year:"",
+            image_url:""
         },
         validationSchema:formSchema,
         onSubmit:(values) =>{
@@ -31,6 +32,7 @@ const formSchema = yup.object().shape({
                     title:values.title,
                     creator:values.creator,
                     release_year:Number(values.release_year),
+                    image_url:values.image_url
                 })
             })
             .then((r) =>r.json())
@@ -70,6 +72,13 @@ const formSchema = yup.object().shape({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}/>
             {formik.touched.release_year && formik.errors.release_year}
+            <input 
+            type='text' 
+            name='image_url' 
+            placeholder='image'
+            value={formik.values.image_url}
+            onChange={formik.handleChange}
+            />
             <button type='submit'>Add Manga</button>
         </form>
         </div>

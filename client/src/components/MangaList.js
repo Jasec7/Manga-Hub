@@ -1,12 +1,15 @@
 import React from "react";
-import MangaDetails from "./MangaDetails"
+import { Link } from "react-router-dom";
 
-function MangaList({mangas, onDelete}){
+
+function MangaList({mangas}){
     
     return(
         <div className="card">
             {mangas.map((manga)=>(
-                <MangaDetails key ={manga.id} manga={manga} onDelete={onDelete}/>
+                <Link key={manga.id} to={`/mangas/${manga.id}`}>
+                    <h3>{manga.title}</h3>
+                </Link>
             ))}
         </div>
     )

@@ -1,25 +1,44 @@
-import { Link } from "react-router-dom";
-import React, {useState} from 'react';
+
+import { useParams } from "react-router-dom";
+import React, {useEffect, useState} from 'react';
 import Review from "./Review";
 import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
 import Chapter from "./Chapter";
+import {useHistory} from "react-router-dom";
 
-function MangaDetails({manga, onDelete}){
-    const [mangaData, setMangaData] = useState(manga)
+function MangaDetails({onDelete}){
+    const [mangaData, setMangaData] = useState();
     const [isToggle, setIstoggle] = useState(false);
+    const {id} = useParams();
+    const history = useHistory();
     console.log("Data:", mangaData)
-    
 
-    function refetchManga() {
-    fetch(`/mangas/${manga.id}`)
-      .then(r => r.json())
-      .then(updatedManga => setMangaData(updatedManga));
-    }
+    useEffect(() =>{
+        fetch(`/mangas/${id}`)
+        .then(r => r.json())
+        .then(mangaData => setMangaData(mangaData))
+    },[id])
 
     if(!mangaData || !mangaData.manga_chapters){
         return null;
     };
+    
+
+    function refetchManga() {
+    fetch(`/mangas/${id}`)
+      .then(r => r.json())
+      .then(updatedManga => setMangaData(updatedManga));
+    };
+
+    const handleMangaDelete = (id) =>{
+    fetch(`/mangas/${id}`,{
+        method:"DELETE"
+    }).then(() =>{
+        history.push("/mangas")
+
+    });
+};
 
     const handleReviewDelete = (id) => {
         fetch(`/reviews/${id}`,{
@@ -34,7 +53,7 @@ function MangaDetails({manga, onDelete}){
         })
         .then(() => refetchManga())
     };
-
+    
     function handleToggle(){
         setIstoggle(!isToggle)
     };
@@ -56,14 +75,14 @@ function MangaDetails({manga, onDelete}){
     }   
     
 
-  
+        console.log(onDelete)
     return(  
         <div className="details">
             <br/>
             <h2>{mangaData.title}</h2>
             <p>{mangaData.creator}</p>
             <p>{mangaData.release_year}</p>
-            <button onClick={() => onDelete(mangaData.id)}>Delete</button>
+            <button onClick={() => handleMangaDelete(mangaData.id)}>Delete</button>
             <h2>Chapters</h2>
             {mangaData.manga_chapters.map((manga_chapter) =>(
                 <Chapter key={manga_chapter.id} 

@@ -22,15 +22,18 @@ const sortMangas = [...mangas].sort((a,b) =>{
         return a.title.localeCompare(b.title);
     } else if(sortBy === 'z-a'){
         return b.title.localeCompare(a.title)
-    } else {
-        return 0;
     }
+        return 0;
 })
 
 return(
     <div className="App">
     <MangaForm onAddMangas={handleAddManga}/>
-    <Select onChange={(e) => setSortBy(e.target.value)}/>
+    <select onChange={(e) => setSortBy(e.target.value)}>
+        <option value="a-z">a-z</option>
+        <option value="z-a">z-a</option>
+    </select>
+
     <MangaList mangas={sortMangas}/>
     </div>
     )

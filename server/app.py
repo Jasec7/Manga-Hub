@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
-
-# Standard library imports
-
-# Remote library imports
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 
-# Local imports
+
 from config import app, db, api
-# Add your model imports
+
 from models import  Manga, MangaChapter, Chapter, Review
 
-
-# Views go here!
 
 @app.route('/')
 def index():
@@ -182,6 +176,9 @@ class ChaptersId(Resource):
     
     def delete(self, id):
         chapter = Chapter.query.filter_by(id=id).first()
+
+        if not chapter:
+            return {'error':'Chapter not found'}, 404
 
         db.session.delete(chapter)
         db.session.commit()

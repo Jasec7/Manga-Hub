@@ -1,6 +1,7 @@
 
 import { useFormik } from 'formik';
 import * as yup from 'yup'
+import API_URL from "../api";
 
 const formSchema = yup.object().shape({
     title: yup.string().required("Must enter a title"),
@@ -23,7 +24,7 @@ const formSchema = yup.object().shape({
         },
         validationSchema:formSchema,
         onSubmit:(values) =>{
-            fetch('/mangas',{
+            fetch(`${API_URL}/mangas`,{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"

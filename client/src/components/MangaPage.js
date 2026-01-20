@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import MangaList from "./MangaList";
 import MangaForm from "./MangaForm";
+import API_URL from "../api";
 
 
 function MangaPage(){
 const [mangas, setMangas] = useState([]);
 const [sortBy, setSortBy] = useState('a-z');
-const API_URL = "https://manga-hub-555n.onrender.com";
 
 
 useEffect(() =>{

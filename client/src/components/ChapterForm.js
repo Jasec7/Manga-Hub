@@ -1,5 +1,6 @@
 import {useFormik} from "formik";
 import * as yup from "yup";
+import API_URL from "../api";
 
 const formSchema = yup.object().shape({
     title: yup.string().required("Must enter a title"),
@@ -22,7 +23,7 @@ function ChapterForm({ manga_id, onUpdate }) {
     validateOnBlur:false,
     validationSchema: formSchema,
     onSubmit: (values) => {
-      fetch("/chapters", {
+      fetch(`${API_URL}/chapters`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -32,7 +33,7 @@ function ChapterForm({ manga_id, onUpdate }) {
       })
         .then((r) => r.json())
         .then((newChapter) => {
-          return fetch("/mangachapters", {
+          return fetch(`${API_URL}/mangachapters`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

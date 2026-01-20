@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { useFormik } from 'formik';
 import * as yup from "yup";
+import API_URL from "../api";
 
  const formSchema = yup.object().shape({
     reviewer: yup.string().required("Must enter a reviewer name"),
@@ -23,7 +24,7 @@ const ReviewForm = ({manga_id, onUpdate}) =>{
     },
     validationSchema:formSchema,
     onSubmit:(values) =>{
-      fetch("/reviews",{
+      fetch(`${API_URL}/reviews`,{
         method:"POST",
         headers:{
           "Content-Type":"application/json"

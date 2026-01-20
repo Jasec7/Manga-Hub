@@ -6,9 +6,11 @@ import MangaForm from "./MangaForm";
 function MangaPage(){
 const [mangas, setMangas] = useState([]);
 const [sortBy, setSortBy] = useState('a-z');
+const API_URL = "https://manga-hub-555n.onrender.com";
+
 
 useEffect(() =>{
-    fetch("/mangas")
+    fetch(`${API_URL}/mangas`)
     .then(r => r.json())
     .then(mangas => setMangas(mangas))
 },[])

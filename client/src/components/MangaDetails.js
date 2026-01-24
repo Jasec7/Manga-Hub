@@ -8,14 +8,14 @@ import Chapter from "./Chapter";
 import {useHistory} from "react-router-dom";
 import API_URL from "../api";
 
-function MangaDetails({onDelete}){
+function MangaDetails(){
     const [mangaData, setMangaData] = useState();
     const [isToggle, setIstoggle] = useState(false);
     const {id} = useParams();
     const history = useHistory();
 
     useEffect(() =>{
-        fetch(`${API_URL}/mangas/${id}`)
+        fetch(`/mangas/${id}`)
         .then(r => r.json())
         .then(mangaData => setMangaData(mangaData))
     },[id])
@@ -26,13 +26,13 @@ function MangaDetails({onDelete}){
     
 
     function refetchManga() {
-    fetch(`${API_URL}/mangas/${id}`)
+    fetch(`/mangas/${id}`)
       .then(r => r.json())
       .then(updatedManga => setMangaData(updatedManga));
     };
 
     const handleMangaDelete = (id) =>{
-    fetch(`${API_URL}/mangas/${id}`,{
+    fetch(`/mangas/${id}`,{
         method:"DELETE"
     }).then(() =>{
         history.push("/mangas")
@@ -41,14 +41,14 @@ function MangaDetails({onDelete}){
 };
 
     const handleReviewDelete = (id) => {
-        fetch(`${API_URL}/reviews/${id}`,{
+        fetch(`/reviews/${id}`,{
             method:"DELETE"
         })
         .then(() => refetchManga())
     };
 
     const handleChapterDelete = (id) =>{
-        fetch(`${API_URL}/mangachapters/${id}`,{
+        fetch(`/mangachapters/${id}`,{
             method:"DELETE"
         })
         .then(() => refetchManga())
@@ -59,8 +59,8 @@ function MangaDetails({onDelete}){
     };
    
     const handleUpdateReview = (id, {reviewer, comment, rating}) =>{
-        console.log("PATCH payload:", { reviewer, comment, rating });
-        fetch(`${API_URL}/reviews/${id}`,{
+        
+        fetch(`/reviews/${id}`,{
             method:"PATCH",
             headers:{
                 "Content-Type":"application/json",

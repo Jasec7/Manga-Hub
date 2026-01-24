@@ -23,7 +23,7 @@ function ChapterForm({ manga_id, onUpdate }) {
     validateOnBlur:false,
     validationSchema: formSchema,
     onSubmit: (values) => {
-      fetch(`${API_URL}/chapters`, {
+      fetch("/chapters", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,7 +33,7 @@ function ChapterForm({ manga_id, onUpdate }) {
       })
         .then((r) => r.json())
         .then((newChapter) => {
-          return fetch(`${API_URL}/mangachapters`, {
+          return fetch("/mangachapters", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

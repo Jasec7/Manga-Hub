@@ -24,7 +24,7 @@ const ReviewForm = ({manga_id, onUpdate}) =>{
     },
     validationSchema:formSchema,
     onSubmit:(values) =>{
-      fetch(`${API_URL}/reviews`,{
+      fetch("/reviews",{
         method:"POST",
         headers:{
           "Content-Type":"application/json"

@@ -24,7 +24,7 @@ const formSchema = yup.object().shape({
         },
         validationSchema:formSchema,
         onSubmit:(values) =>{
-            fetch(`${API_URL}/mangas`,{
+            fetch("/mangas",{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"

@@ -10,7 +10,7 @@ const [sortBy, setSortBy] = useState('a-z');
 
 
 useEffect(() =>{
-    fetch(`${API_URL}/mangas`)
+    fetch("/mangas")
     .then(r => r.json())
     .then(mangas => setMangas(mangas))
 },[])

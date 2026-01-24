@@ -7,7 +7,7 @@
 ## Overview
 Manga Hub allows manga fans to browse a list of mangas, view detailed information about each title, and contribute their own content. Users can add new mangas, create chapters, and leave reviews for individual manga titles.
 
-The app includes:
+## The app includes:
 * A manga directory.
 * Manga detail pages.
 * A review system tied to individual manga titles.

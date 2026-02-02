@@ -5,14 +5,14 @@ import Review from "./Review";
 import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
 import Chapter from "./Chapter";
-import {useHistory} from "react-router-dom";
+//import {useHistory} from "react-router-dom";
 import API_URL from "../api";
 
 function MangaDetails(){
     const [mangaData, setMangaData] = useState();
     const [isToggle, setIstoggle] = useState(false);
     const {id} = useParams();
-    const history = useHistory();
+    
 
     useEffect(() =>{
         fetch(`/mangas/${id}`)
@@ -25,20 +25,13 @@ function MangaDetails(){
     };
     
 
-    function refetchManga() {
+   /* function refetchManga() {
     fetch(`/mangas/${id}`)
       .then(r => r.json())
       .then(updatedManga => setMangaData(updatedManga));
-    };
+    };*/
 
-    const handleMangaDelete = (id) =>{
-    fetch(`/mangas/${id}`,{
-        method:"DELETE"
-    }).then(() =>{
-        history.push("/mangas")
 
-    });
-};
 
     const handleReviewDelete = (id) => {
         fetch(`/reviews/${id}`,{
@@ -81,7 +74,6 @@ function MangaDetails(){
             <p>{mangaData.creator}</p>
             <p>{mangaData.release_year}</p>
             <img src={mangaData.image_url} alt={mangaData.title} className="manga-image"/>
-            <button onClick={() => handleMangaDelete(mangaData.id)}>Delete</button>
             <h2>Volumes</h2>
             <hr/>
             {mangaData.manga_chapters.map((manga_chapter) =>(

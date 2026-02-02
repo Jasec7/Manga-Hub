@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
 import MangaList from "./MangaList";
 import MangaForm from "./MangaForm";
-import API_URL from "../api";
+//import API_URL from "../api";
 
 
 function MangaPage(){
 const [mangas, setMangas] = useState([]);
 const [sortBy, setSortBy] = useState('a-z');
 
-
+console.log('manga state:', mangas)
 useEffect(() =>{
     fetch("/mangas")
     .then(r => r.json())
@@ -17,6 +17,17 @@ useEffect(() =>{
 
 function handleAddManga(newManga){
     setMangas([...mangas, newManga])
+};
+
+ const handleMangaDelete = (id) =>{
+    fetch(`/mangas/${id}`,{
+        method:"DELETE"
+    }).then((r) =>{
+      if(r.ok){
+        setMangas((mangas) =>
+        mangas.filter((manga) => manga.id !== id));
+      }
+    });
 };
 
 const sortMangas = [...mangas].sort((a,b) =>{
@@ -35,8 +46,7 @@ return(
         <option value="a-z">a-z</option>
         <option value="z-a">z-a</option>
     </select>
-
-    <MangaList mangas={sortMangas}/>
+    <MangaList mangas={sortMangas} onDelete={handleMangaDelete}/>
     </div>
     )
 }

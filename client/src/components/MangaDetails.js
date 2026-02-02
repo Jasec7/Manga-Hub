@@ -82,7 +82,8 @@ function MangaDetails(){
             <p>{mangaData.release_year}</p>
             <img src={mangaData.image_url} alt={mangaData.title} className="manga-image"/>
             <button onClick={() => handleMangaDelete(mangaData.id)}>Delete</button>
-            <h2>Chapters</h2>
+            <h2>Volumes</h2>
+            <hr/>
             {mangaData.manga_chapters.map((manga_chapter) =>(
                 <Chapter key={manga_chapter.id} 
                 manga_chapter={manga_chapter}

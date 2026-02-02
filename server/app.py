@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-from flask import request, jsonify, make_response
+from flask import request, make_response
 from flask_restful import Resource
 
-
-
 from config import app, db, api
-
-from models import  Manga, MangaChapter, Chapter, Review
+from models import  Manga, Volume, Chapter, Review
 
 
 @app.route('/')
@@ -77,7 +74,7 @@ class Reviews(Resource):
         if 'comment' not in data or not data['comment'] or data['comment'].strip() == "":
             return {'error':'A comment is required'}, 400
         if 'rating' not in data:
-            return {'error':'Rating is required'}
+            return {'error':'Rating is required'}, 400
         if not isinstance(data['rating'],(int, float)):
             return {'error':'It needs a rating'}, 400
         if data['rating'] <= 0 or data['rating'] > 5:
@@ -151,7 +148,7 @@ class Chapters(Resource):
     def post(self):
         data = request.get_json()
 
-        if 'title' not in data or data['title'].strip() == "":
+        if 'title' not in data or not data['title'] or data['title'].strip() == "":
             return {'error':'A title is required'}, 400
         if 'pages' not in data:
             return {'error':'Pages are required'}, 400
@@ -175,6 +172,28 @@ class ChaptersId(Resource):
         
         return make_response(chapter.to_dict(), 200)
     
+    def patch(self, id):
+        chapter = Chapter.query.filter_by(id=id).first()
+        data = request.get_json()
+        
+        if not chapter:
+            return {'error':'Chapter not found'}, 404
+        
+        if 'pages' in data:
+            if not isinstance(data['pages'],(int)):
+                return {'error':'It needs the number of pages'}, 400
+            if data['pages'] == 0:
+                return {'error':'Pages cannot be 0'}, 400
+
+        fields = ['title', 'pages']
+
+        for key in data:
+            if key in fields:
+                setattr(chapter, key, data[key])
+
+        db.session.add(chapter)
+        db.session.commit()
+    
     def delete(self, id):
         chapter = Chapter.query.filter_by(id=id).first()
 
@@ -185,18 +204,20 @@ class ChaptersId(Resource):
         db.session.commit()
         return make_response("", 204)
     
-class MangaChapters(Resource):
+class Volumes(Resource):
     def get(self):
-        m_chapters = [m_chapter.to_dict() for m_chapter in MangaChapter.query.all()]
-        return make_response(m_chapters, 200)
+        volumes = [volume.to_dict() for volume in Volume.query.all()]
+        return make_response(volumes, 200)
     
     def post(self):
         data = request.get_json()
 
-        if "chapter_number" not in data:
+        if "volume_number" not in data:
             return {'error':'Field missing'}, 400
-        if not isinstance(data['chapter_number'], int):
-            return {'error':'Chapter number must be an integer'}, 400
+        if not isinstance(data['volume_number'], int):
+            return {'error':'Volume number must be an integer'}, 400
+        if 'edition' not in data:
+            return {'error':'A edition is required'},400
         if 'manga_id' not in data:
             return {'error':'manga_id is required'}, 400
         if 'chapter_id' not in data:
@@ -210,35 +231,36 @@ class MangaChapters(Resource):
         if not chapter:
             return {'error':'Chapter not found'}, 404
 
-        duplicate = MangaChapter.query.filter_by(manga_id = data['manga_id'], chapter_id = data['chapter_id']).first()
+        duplicate = Volume.query.filter_by(manga_id = data['manga_id'], chapter_id = data['chapter_id']).first()
         if duplicate:
             return {'error':'This chapter is already linked to this mangas'}, 409
         
-        new_manga_chapter = MangaChapter(
-            chapter_number = data['chapter_number'],
+        new_volume = Volume(
+            volume_number = data['volume_number'],
+            edition = data['edition'],
             manga_id = data['manga_id'],
             chapter_id = data['chapter_id']
         )
-        db.session.add(new_manga_chapter)
+        db.session.add(new_volume)
         db.session.commit()
 
-        return make_response(new_manga_chapter.to_dict(), 201)
+        return make_response(new_volume.to_dict(), 201)
         
-class MangaChaptersId(Resource):
+class VolumeId(Resource):
     def get(self, id):
-        m_chapter = MangaChapter.query.filter_by(id=id).first()
+        volume = Volume.query.filter_by(id=id).first()
 
-        if not m_chapter:
+        if not volume:
             return {'error':'Not Found'}, 404
         
-        return make_response(m_chapter.to_dict(), 200)
+        return make_response(volume.to_dict(), 200)
     
     def delete(self, id):
-        m_chapter = MangaChapter.query.filter_by(id=id).first()
-        if not m_chapter:
-            return {'error':'MangaChapter not found'}, 404
+        volume = Volume.query.filter_by(id=id).first()
+        if not volume:
+            return {'error':'Volume not found'}, 404
         
-        db.session.delete(m_chapter)
+        db.session.delete(volume)
         db.session.commit()
 
         return make_response("", 204)
@@ -249,8 +271,8 @@ api.add_resource(Reviews,'/reviews')
 api.add_resource(ReviewsId,'/reviews/<int:id>')
 api.add_resource(Chapters,'/chapters')
 api.add_resource(ChaptersId,'/chapters/<int:id>')
-api.add_resource(MangaChapters,'/mangachapters')
-api.add_resource(MangaChaptersId,'/mangachapters/<int:id>')
+api.add_resource(Volumes,'/volumes')
+api.add_resource(VolumeId,'/volumes/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

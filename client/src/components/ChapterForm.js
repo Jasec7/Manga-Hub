@@ -39,7 +39,7 @@ function ChapterForm({ manga_id, onUpdate }) {
             body: JSON.stringify({
               manga_id: manga_id,
               chapter_id: newChapter.id,
-              chapter_number: Number(values.chapter_number),
+              volume_number: Number(values.volume_number),
             }),
           });
         })

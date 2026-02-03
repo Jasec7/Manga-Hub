@@ -10,7 +10,7 @@ function MangaList({mangas, onDelete}){
             <div key={manga.id} className="card">
               <h3>{manga.title}</h3>
            
-              <Link to={`/mangas/${manga.id}`}>Volumes</Link>
+              <Link to={`/mangas/${manga.id}`}> View Volumes</Link>
               <button onClick={() => onDelete(manga.id)}>
                 <strong>x</strong>
               </button>

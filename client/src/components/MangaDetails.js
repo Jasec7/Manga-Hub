@@ -5,12 +5,14 @@ import Review from "./Review";
 import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
 import Chapter from "./Chapter";
+
 //import {useHistory} from "react-router-dom";
 import API_URL from "../api";
 
 function MangaDetails(){
-    const [mangaData, setMangaData] = useState();
+    const [mangaData, setMangaData] = useState(null);
     const [isToggle, setIstoggle] = useState(false);
+    const [pickVolume, setPickVolume] = useState(null)
     const {id} = useParams();
     
 
@@ -20,52 +22,24 @@ function MangaDetails(){
         .then(mangaData => setMangaData(mangaData))
     },[id])
 
-    if(!mangaData || !mangaData.manga_chapters){
+    if(!mangaData || !mangaData.volumes){
         return null;
     };
+    console.log(mangaData)
+
     
-
-   /* function refetchManga() {
-    fetch(`/mangas/${id}`)
-      .then(r => r.json())
-      .then(updatedManga => setMangaData(updatedManga));
-    };*/
-
-
-
-    const handleReviewDelete = (id) => {
-        fetch(`/reviews/${id}`,{
-            method:"DELETE"
-        })
-        .then(() => refetchManga())
-    };
-
-    const handleChapterDelete = (id) =>{
+   /* const handleChapterDelete = (id) =>{
         fetch(`/mangachapters/${id}`,{
             method:"DELETE"
         })
         .then(() => refetchManga())
-    };
+    };*/
     
     function handleToggle(){
         setIstoggle(!isToggle)
     };
    
-    const handleUpdateReview = (id, {reviewer, comment, rating}) =>{
-        
-        fetch(`/reviews/${id}`,{
-            method:"PATCH",
-            headers:{
-                "Content-Type":"application/json",
-            },
-            body:JSON.stringify({reviewer, comment, rating:Number(rating)})
-        })
-        .then((res) => {
-          if(res.ok){
-            refetchManga()
-          }
-        })
-    };  
+ 
 
     return(  
         <div className="details">
@@ -74,14 +48,23 @@ function MangaDetails(){
             <p>{mangaData.creator}</p>
             <p>{mangaData.release_year}</p>
             <img src={mangaData.image_url} alt={mangaData.title} className="manga-image"/>
-            <h2>Volumes</h2>
+
             <hr/>
-            {mangaData.manga_chapters.map((manga_chapter) =>(
-                <Chapter key={manga_chapter.id} 
-                manga_chapter={manga_chapter}
-                onDelete={handleChapterDelete} 
-                /> ))}
+            {mangaData.volumes?.map((volume) =>(
+                <div 
+                key={volume.id} className="volume card"
+                onClick={() => setPickVolume(volume)}>
+                <h4>Volume {volume.volume_number}</h4>
+                </div>
                 
+             ))}
+             <hr/>
+             {pickVolume && (
+                <div>
+                <Chapter chapter={pickVolume.chapter} volume={pickVolume} />
+                </div>
+            )}
+            
             <p>Reviews: ({mangaData.reviews.length})</p>
             <button onClick={handleToggle}>
                 {isToggle ? 'Hide review' : 'Show review'}
@@ -92,12 +75,11 @@ function MangaDetails(){
                 reviewer={review.reviewer}
                 comment={review.comment}
                 rating={review.rating}
-                onDelete={handleReviewDelete} 
-                onReview={handleUpdateReview}/>
+                 />
              )))}
-             <ChapterForm onUpdate={refetchManga}
+             <ChapterForm 
              manga_id={mangaData.id}/>
-             <ReviewForm onUpdate={refetchManga}
+             <ReviewForm 
              manga_id={mangaData.id} />
         </div>
     ) 

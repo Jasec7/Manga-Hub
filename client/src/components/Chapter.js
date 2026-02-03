@@ -1,13 +1,13 @@
 
-function Chapter({ manga_chapter, onDelete }) {
+function Chapter({ volume, onDelete }) {
   
   return (
     <div>
       <h3>
-        Chapter {manga_chapter.chapter_number}: {manga_chapter.chapter.title}
+        Chapter {volume.volume_number}: {volume.chapter.title}
       </h3>
-      <p>Pages:{manga_chapter.chapter.pages}</p>
-      <button onClick={() => onDelete(manga_chapter.id)}>Delete</button>
+      <p>Pages:{volume.chapter.pages}</p>
+      <button onClick={() => onDelete(volume.id)}>Delete</button>
     </div>
   );
 }

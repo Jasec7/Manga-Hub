@@ -7,7 +7,7 @@ function Chapter({ volume, onDelete }) {
         Chapter {volume.volume_number}: {volume.chapter.title}
       </h3>
       <p>Pages:{volume.chapter.pages}</p>
-      <button onClick={() => onDelete(volume.id)}>Delete</button>
+      <button onClick={() => onDelete(volume.chapter.id)}>Delete</button>
     </div>
   );
 }

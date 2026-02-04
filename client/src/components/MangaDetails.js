@@ -27,13 +27,24 @@ function MangaDetails(){
     };
     console.log(mangaData)
 
-    
-   /* const handleChapterDelete = (id) =>{
-        fetch(`/mangachapters/${id}`,{
-            method:"DELETE"
-        })
-        .then(() => refetchManga())
-    };*/
+    const handleAddChapter = (newVolume) => {
+    setMangaData((prev) => ({
+        ...prev,
+        volumes: [...prev.volumes, newVolume],
+  }));
+};
+
+    const handleChapterDelete = (id) =>{
+    fetch(`/chapters/${id}`,{
+        method:"DELETE"
+    }).then((r) =>{
+      if(r.ok){
+        setMangaData((prev) => ({...prev,
+             volumes: prev.volumes.filter((volume) => volume.chapter.id !== id),
+         }))
+       }
+    })
+}
     
     function handleToggle(){
         setIstoggle(!isToggle)
@@ -61,7 +72,10 @@ function MangaDetails(){
              <hr/>
              {pickVolume && (
                 <div>
-                <Chapter chapter={pickVolume.chapter} volume={pickVolume} />
+                <Chapter chapter={pickVolume.chapter} 
+                volume={pickVolume} 
+                onAddChapters={handleAddChapter}
+                onDelete={handleChapterDelete}/>
                 </div>
             )}
             

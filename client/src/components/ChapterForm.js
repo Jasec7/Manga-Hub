@@ -12,7 +12,7 @@ const formSchema = yup.object().shape({
       .min(1),
   });
 
-function ChapterForm({ manga_id, onUpdate }) {
+function ChapterForm({ manga_id, onAddChapter }) {
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -33,23 +33,22 @@ function ChapterForm({ manga_id, onUpdate }) {
       })
         .then((r) => r.json())
         .then((newChapter) => {
-          return fetch("/mangachapters", {
+          return fetch("/volumes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               manga_id: manga_id,
               chapter_id: newChapter.id,
               volume_number: Number(values.volume_number),
+              edition:values.edition
             }),
           });
         })
-        .then((res) => {
-          if (res.ok) {
-            formik.resetForm();
-            onUpdate();
-          }
-        });
-    },
+        then((r) =>r.json())
+        .then((newChapter) =>{onAddMangas(newChapter);
+              formik.resetForm()
+          });
+      }
   });
   
 

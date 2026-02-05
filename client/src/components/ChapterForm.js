@@ -5,11 +5,12 @@ import API_URL from "../api";
 const formSchema = yup.object().shape({
     title: yup.string().required("Must enter a title"),
     pages: yup.number().positive().integer().required("The number of pages is required"),
-    chapter_number:
+    volume_number:
       yup.number()
       .required("it needs the chapter's number")
       .typeError("Please enter an Integer")
       .min(1),
+    edition: yup.string()
   });
 
 function ChapterForm({ manga_id, onAddChapter }) {
@@ -17,7 +18,8 @@ function ChapterForm({ manga_id, onAddChapter }) {
     initialValues: {
       title: "",
       pages: "",
-      chapter_number: "",
+      volume_number: "",
+      edition:""
     },
     validateOnChange:false,
     validateOnBlur:false,
@@ -44,8 +46,8 @@ function ChapterForm({ manga_id, onAddChapter }) {
             }),
           });
         })
-        then((r) =>r.json())
-        .then((newChapter) =>{onAddMangas(newChapter);
+        .then((r) =>r.json())
+        .then((newVolume) =>{onAddChapter(newVolume);
               formik.resetForm()
           });
       }
@@ -76,13 +78,22 @@ function ChapterForm({ manga_id, onAddChapter }) {
         {formik.touched.pages && formik.errors.pages}
         <input
           type="number"
-          name="chapter_number"
-          placeholder="Chapter Number"
-          value={formik.values.chapter_number}
+          name="volume_number"
+          placeholder="Volume Number"
+          value={formik.values.volume_number}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        {formik.touched.chapter_number && formik.errors.chapter_number}
+        {formik.touched.volume_number && formik.errors.volume_number}
+        <input
+          type="text"
+          name="edition"
+          placeholder="Edition"
+          value={formik.values.edition}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.edition && formik.errors.edition}
         <button type="submit">Add Chapter</button>
       </form>
     </div>

@@ -42,6 +42,7 @@ function MangaDetails(){
         setMangaData((prev) => ({...prev,
              volumes: prev.volumes.filter((volume) => volume.chapter.id !== id),
          }))
+         setPickVolume(null);
        }
     })
 }
@@ -65,7 +66,7 @@ function MangaDetails(){
                 <div 
                 key={volume.id} className="volume card"
                 onClick={() => setPickVolume(volume)}>
-                <h4>Volume {volume.volume_number}</h4>
+                <h4>Volume {volume.volume_number} {volume.edition}</h4>
                 </div>
                 
              ))}
@@ -73,8 +74,7 @@ function MangaDetails(){
              {pickVolume && (
                 <div>
                 <Chapter chapter={pickVolume.chapter} 
-                volume={pickVolume} 
-                onAddChapters={handleAddChapter}
+                volume={pickVolume}
                 onDelete={handleChapterDelete}/>
                 </div>
             )}
@@ -92,7 +92,8 @@ function MangaDetails(){
                  />
              )))}
              <ChapterForm 
-             manga_id={mangaData.id}/>
+             manga_id={mangaData.id}
+             onAddChapter={handleAddChapter}/>
              <ReviewForm 
              manga_id={mangaData.id} />
         </div>

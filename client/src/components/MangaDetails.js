@@ -44,8 +44,28 @@ function MangaDetails(){
          }))
          setPickVolume(null);
        }
-    })
-}
+    });
+};
+
+    const handleUpdateChapter = (id, updatedFields) =>{
+        fetch(`/chapters/${id}`,{
+          method:"PATCH",
+          headers:{
+            "Content-Type":"application/json",
+          },
+          body:JSON.stringify(updatedFields),
+        })
+        .then((r)=> r.json())
+        .then((updatedChapter) => {
+            setMangaData((prev) =>({
+                ...prev,
+                volumes: prev.volumes.map((volume) =>
+                volume.chapter.id === id
+                ? { ...volume, chapter: updatedChapter }
+                : volume)
+            }))
+        })
+    }
     
     function handleToggle(){
         setIstoggle(!isToggle)
@@ -71,11 +91,12 @@ function MangaDetails(){
                 
              ))}
              <hr/>
-             {pickVolume && (
+             {pickVolume?.chapter && (
                 <div>
-                <Chapter chapter={pickVolume.chapter} 
+                <Chapter  
                 volume={pickVolume}
-                onDelete={handleChapterDelete}/>
+                onDelete={handleChapterDelete}
+                onUpdate={handleUpdateChapter}/>
                 </div>
             )}
             

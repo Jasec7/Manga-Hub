@@ -9,7 +9,7 @@ import Chapter from "./Chapter";
 //import {useHistory} from "react-router-dom";
 import API_URL from "../api";
 
-function MangaDetails(){
+function MangaDetails({mangas}){
     const [mangaData, setMangaData] = useState(null);
     const [isToggle, setIstoggle] = useState(false);
     const [pickVolume, setPickVolume] = useState(null)

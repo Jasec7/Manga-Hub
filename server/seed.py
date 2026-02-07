@@ -18,10 +18,10 @@ if __name__ == '__main__':
 
 
         print("Deleting data...")
-        Volume.query.delete()
-        Review.query.delete()
-        Manga.query.delete()
         Chapter.query.delete()
+        Review.query.delete()
+        Volume.query.delete()
+        Manga.query.delete()
         
 
         print("creating mangas...")
@@ -33,22 +33,22 @@ if __name__ == '__main__':
         db.session.add_all(mangas)
         db.session.commit()
 
-        print("creating chapters...")
-        c1 = Chapter(title = 'Ryomen Sukuna', pages = 55)
-        c2 = Chapter(title = 'The Day of Departure', pages = 184)
-        c3 = Chapter(title = 'The Mysterious Warrior from Space', pages = 15)
-        c4 = Chapter(title = 'One Punch', pages = 18)
-        chapters = [c1, c2, c3, c4]
-        db.session.add_all(chapters)
-        db.session.commit()
-
         print("Creating volumes...")
-        v1 = Volume(volume_number = 1, edition='Gold', manga = m1, chapter = c1)
-        v2 = Volume(volume_number = 2, edition='Gold', manga = m1, chapter = c2)
-        v3 = Volume(volume_number = 1, edition='Bronze', manga = m3, chapter = c3)
-        v4 = Volume(volume_number = 3, edition='Bronze', manga = m2, chapter = c3)
+        v1 = Volume(volume_number = 1, edition='Gold')
+        v2 = Volume(volume_number = 2, edition='Gold')
+        v3 = Volume(volume_number = 1, edition='Bronze')
+        v4 = Volume(volume_number = 3, edition='Bronze')
         volumes = [v1, v2, v3, v4]
         db.session.add_all(volumes)
+        db.session.commit()
+
+        print("creating chapters...")
+        c1 = Chapter(title = 'Ryomen Sukuna', pages = 55, manga = m1, volume = v1)
+        c2 = Chapter(title = 'The Day of Departure', pages = 184, manga = m1, volume = v2)
+        c3 = Chapter(title = 'The Mysterious Warrior from Space', pages = 15, manga = m3, volume = v3)
+        c4 = Chapter(title = 'One Punch', pages = 18, manga = m2, volume = v3)
+        chapters = [c1, c2, c3, c4]
+        db.session.add_all(chapters)
         db.session.commit()
 
         print("Creating reviews")

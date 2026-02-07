@@ -14,12 +14,11 @@ class Manga(db.Model, SerializerMixin):
     release_year = db.Column(db.Integer)
     image_url = db.Column(db.String)
 
-    volumes = db.relationship("Volume",back_populates="manga", cascade="all, delete-orphan")
-    chapters = association_proxy('volumes','chapter', creator=lambda chapter_obj: Volume(chapter=chapter_obj))
+    volumes = db.relationship("Volume", secondary='chapters',back_populates="mangas")
+    chapters = db.relationship('Chapter', back_populates="manga", cascade="all, delete-orphan")
     reviews = db.relationship("Review", back_populates="manga",cascade="all, delete-orphan")
 
-    
-    serialize_rules = ('-volumes.manga', '-reviews.manga' ,)
+    serialize_rules = ('-chapters.manga', '-reviews.manga' ,)
 
     def __repr__(self):
         return f'<Manga {self.id}, {self.title}, {self.creator}, {self.release_year}> '
@@ -30,14 +29,18 @@ class Chapter(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     pages = db.Column(db.Integer)
+    
+    manga_id = db.Column(db.Integer, db.ForeignKey('mangas.id'))
+    volume_id = db.Column(db.Integer, db.ForeignKey('volumes.id'))
 
-    volumes = db.relationship("Volume", back_populates="chapter", cascade="all, delete-orphan")
-    mangas = association_proxy('volumes', 'manga', creator=lambda manga_obj: Volume(manga=manga_obj))
+    manga = db.relationship('Manga', back_populates="chapters")
+    volume = db.relationship("Volume", back_populates="chapters")
+    
 
-    serialize_rules = ('-mangas.chapters', '-volumes.chapter' ,)
+    serialize_rules = ('-manga.chapters', '-volume.chapters' ,)
 
     def __repr__(self):
-        return f'<Chapter {self.id}, {self.title}, {self.pages}> '
+        return f'<Chapter {self.id}, {self.title}, {self.pages}, {self.manga.title}, {self.volume.volume_number}> '
     
 class Volume(db.Model, SerializerMixin):
     __tablename__="volumes"
@@ -46,16 +49,13 @@ class Volume(db.Model, SerializerMixin):
     volume_number = db.Column(db.Integer)
     edition = db.Column(db.String)
 
-    manga_id = db.Column(db.Integer, db.ForeignKey('mangas.id'))
-    chapter_id = db.Column(db.Integer, db.ForeignKey('chapters.id'))
+    mangas = db.relationship("Manga", secondary='chapters', back_populates="volumes")
+    chapters = db.relationship("Chapter", back_populates="volume", cascade="all, delete-orphan")
 
-    manga = db.relationship("Manga", back_populates="volumes")
-    chapter = db.relationship("Chapter", back_populates="volumes")
-
-    serialize_rules = ('-manga.volumes', '-chapter.volumes' ,)
+    serialize_rules = ('-mangas.volumes', '-chapters.volume' ,)
 
     def __repr__(self):
-        return f'<Volume {self.id}, vol={self.volume_number}, edition={self.edition}, {self.manga.title} {self.chapter.title}> '
+        return f'<Volume {self.id}, vol={self.volume_number}, edition={self.edition} '
 
 
 

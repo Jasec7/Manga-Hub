@@ -153,11 +153,30 @@ class Chapters(Resource):
         if 'pages' not in data:
             return {'error':'Pages are required'}, 400
         if not isinstance(data['pages'], int):
-            return {'error':'Pages must be a number'}
+            return {'error':'Pages must be a number'}, 400
+        if 'manga_id' not in data:
+            return {'error':'manga_id is required'}, 400
+        if 'volume_id' not in data:
+            return {'error':'volume_id is required'}, 400
+
+        manga = Manga.query.filter_by(id=data['manga_id']).first()
+        if not manga:
+            return {'error':'Manga not found'}, 404
+        
+        volume = Volume.query.filter_by(id=data['volume_id']).first()
+        if not volume:
+            return {'error':'Volume not found'}, 404
+
+        duplicate = Chapter.query.filter_by(manga_id = data['manga_id'], volume_id = data['volume_id']).first()
+        if duplicate:
+            return {'error':'This chapter is already linked to this mangas'}, 409
+        
         
         new_chapter = Chapter(
             title = data['title'],
-            pages = data['pages']
+            pages = data['pages'],
+            manga_id = data['manga_id'],
+            volume_id = data['volume_id']
         )
         db.session.add(new_chapter)
         db.session.commit()
@@ -182,7 +201,7 @@ class ChaptersId(Resource):
         if 'pages' in data:
             if not isinstance(data['pages'],(int)):
                 return {'error':'It needs the number of pages'}, 400
-            if data['pages'] == 0:
+            if data['pages'] <= 0:
                 return {'error':'Pages cannot be 0'}, 400
 
         fields = ['title', 'pages']
@@ -193,6 +212,7 @@ class ChaptersId(Resource):
 
         db.session.add(chapter)
         db.session.commit()
+        return make_response(chapter.to_dict(), 202)
     
     def delete(self, id):
         chapter = Chapter.query.filter_by(id=id).first()
@@ -218,28 +238,11 @@ class Volumes(Resource):
             return {'error':'Volume number must be an integer'}, 400
         if 'edition' not in data:
             return {'error':'A edition is required'},400
-        if 'manga_id' not in data:
-            return {'error':'manga_id is required'}, 400
-        if 'chapter_id' not in data:
-            return {'error':'chapter_id is required'}, 400
-        
-        manga = Manga.query.filter_by(id=data['manga_id']).first()
-        if not manga:
-            return {'error':'Manga not found'}, 404
-        
-        chapter = Chapter.query.filter_by(id=data['chapter_id']).first()
-        if not chapter:
-            return {'error':'Chapter not found'}, 404
-
-        duplicate = Volume.query.filter_by(manga_id = data['manga_id'], chapter_id = data['chapter_id']).first()
-        if duplicate:
-            return {'error':'This chapter is already linked to this mangas'}, 409
         
         new_volume = Volume(
             volume_number = data['volume_number'],
             edition = data['edition'],
-            manga_id = data['manga_id'],
-            chapter_id = data['chapter_id']
+
         )
         db.session.add(new_volume)
         db.session.commit()

@@ -10,7 +10,7 @@ function App() {
   const [mangas, setMangas] = useState([]);
   const [sortBy, setSortBy] = useState('a-z');
   
-  console.log('manga state:', mangas)
+  
   useEffect(() =>{
       fetch("/mangas")
       .then(r => r.json())

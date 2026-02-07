@@ -1,13 +1,13 @@
 
 import { useParams } from "react-router-dom";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import Review from "./Review";
 import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
 import Chapter from "./Chapter";
 
 //import {useHistory} from "react-router-dom";
-import API_URL from "../api";
+//import API_URL from "../api";
 
 function MangaDetails({mangas}){
     const [mangaData, setMangaData] = useState(null);
@@ -15,16 +15,20 @@ function MangaDetails({mangas}){
     const [pickVolume, setPickVolume] = useState(null)
     const {id} = useParams();
     
+    useEffect(() => {
+    const mangaId = parseInt(id, 10);
+    const findManga = mangas.find((manga) => manga.id === mangaId)
 
-    useEffect(() =>{
-        fetch(`/mangas/${id}`)
-        .then(r => r.json())
-        .then(mangaData => setMangaData(mangaData))
-    },[id])
+    if (findManga){
+        setMangaData(findManga);
+        setPickVolume(null);
+    }
+}, [mangas, id])
 
     if(!mangaData || !mangaData.volumes){
         return null;
     };
+    
     console.log(mangaData)
 
     const handleAddChapter = (newVolume) => {

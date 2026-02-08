@@ -44,53 +44,35 @@ function MangaDetails({mangas}){
     }).then((r) =>{
       if(r.ok){
         setMangaData((prev) => ({...prev,
-             chapter: prev.chapters.filter((chapter) => chapter.id !== id),
+             chapters: prev.chapters.filter((chapter) => chapter.id !== id),
          }))
          setPickVolume(null);
        }
     });
 };
 
-    const handleUpdateChapter = (id, updatedFields) =>{
-        fetch(`/chapters/${id}`,{
-          method:"PATCH",
-          headers:{
-            "Content-Type":"application/json",
-          },
-          body:JSON.stringify(updatedFields),
-        })
-        .then((r)=> r.json())
+    const handleUpdateChapter = (id, updatedFields) => {
+        fetch(`/chapters/${id}`, {
+         method: "PATCH",
+         headers:{
+            "Content-Type": "application/json"
+         },
+         body: JSON.stringify(updatedFields),
+       })
+        .then((r) => r.json())
         .then((updatedChapter) => {
-            setMangaData((prev) =>({
+            setMangaData((prev) => ({
                 ...prev,
-                volumes: prev.volumes.map((volume) =>
-                volume.chapter.id === id
-                ? { ...volume, chapter: updatedChapter }
-                : volume)
-            }))
-        })
-    }
-    
+                chapters: prev.chapters.map((ch) =>
+                    ch.id === id ? updatedChapter : ch
+            ),
+        }));
+    });
+};
     function handleToggle(){
         setIstoggle(!isToggle)
     };
    
- /*<div 
-                key={volume.id} className="volume card"
-                onClick={() => setPickVolume(volume)}>
-                <h4>Volume {volume.volume_number} {volume.edition}</h4>
-                </div>  
-             ))}
-             <hr/>
-             {pickVolume?.chapter && (
-                <div>
-                <Chapter  
-                volume={pickVolume}
-                onDelete={handleChapterDelete}
-                onUpdate={handleUpdateChapter}/>
-                </div>
-            )}*/
-
     return(  
         <div className="details">
             <br/>
@@ -100,6 +82,16 @@ function MangaDetails({mangas}){
             <img src={mangaData.image_url} alt={mangaData.title} className="manga-image"/>
 
             <hr/>
+            {mangaData.volumes?.map((volume) => (
+                <div className="volume card"
+                key={volume.id}
+                onClick={() => setPickVolume(volume)}
+                style={{ cursor: "pointer" }}>
+                    <h4>
+                        Volume {volume.volume_number} {volume.edition}
+                    </h4>
+                 </div>
+            ))}
             {mangaData.chapters?.filter((chapter) => chapter.volume.id === pickVolume?.id).map((chapter)=>(
             <Chapter
               key={chapter.id}

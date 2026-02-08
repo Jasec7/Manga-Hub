@@ -31,7 +31,8 @@ function ChapterForm({volumes,manga_id,onAddChapter }) {
       })
         .then((r) => r.json())
         .then((newChapter) => {
-        onAddChapter(newChapter);
+          console.log("New Chapter:", newChapter)
+          onAddChapter(newChapter);
         formik.resetForm();
         })
     }

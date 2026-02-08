@@ -31,10 +31,10 @@ function MangaDetails({mangas}){
     
     console.log(mangaData)
 
-    const handleAddChapter = (newVolume) => {
+    const handleAddChapter = (newChapter) => {
     setMangaData((prev) => ({
         ...prev,
-        volumes: [...prev.volumes, newVolume],
+        chapters: [...prev.chapters, newChapter],
   }));
 };
 
@@ -44,7 +44,7 @@ function MangaDetails({mangas}){
     }).then((r) =>{
       if(r.ok){
         setMangaData((prev) => ({...prev,
-             volumes: prev.volumes.filter((volume) => volume.chapter.id !== id),
+             chapter: prev.chapters.filter((chapter) => chapter.id !== id),
          }))
          setPickVolume(null);
        }
@@ -75,7 +75,21 @@ function MangaDetails({mangas}){
         setIstoggle(!isToggle)
     };
    
- 
+ /*<div 
+                key={volume.id} className="volume card"
+                onClick={() => setPickVolume(volume)}>
+                <h4>Volume {volume.volume_number} {volume.edition}</h4>
+                </div>  
+             ))}
+             <hr/>
+             {pickVolume?.chapter && (
+                <div>
+                <Chapter  
+                volume={pickVolume}
+                onDelete={handleChapterDelete}
+                onUpdate={handleUpdateChapter}/>
+                </div>
+            )}*/
 
     return(  
         <div className="details">
@@ -86,24 +100,14 @@ function MangaDetails({mangas}){
             <img src={mangaData.image_url} alt={mangaData.title} className="manga-image"/>
 
             <hr/>
-            {mangaData.volumes?.map((volume) =>(
-                <div 
-                key={volume.id} className="volume card"
-                onClick={() => setPickVolume(volume)}>
-                <h4>Volume {volume.volume_number} {volume.edition}</h4>
-                </div>
-                
-             ))}
-             <hr/>
-             {pickVolume?.chapter && (
-                <div>
-                <Chapter  
-                volume={pickVolume}
-                onDelete={handleChapterDelete}
-                onUpdate={handleUpdateChapter}/>
-                </div>
-            )}
-            
+            {mangaData.chapters?.filter((chapter) => chapter.volume.id === pickVolume?.id).map((chapter)=>(
+            <Chapter
+              key={chapter.id}
+              chapter={chapter}
+              onDelete={handleChapterDelete}
+              onUpdate={handleUpdateChapter}
+             />
+            ))}
             <p>Reviews: ({mangaData.reviews.length})</p>
             <button onClick={handleToggle}>
                 {isToggle ? 'Hide review' : 'Show review'}
@@ -118,6 +122,7 @@ function MangaDetails({mangas}){
              )))}
              <ChapterForm 
              manga_id={mangaData.id}
+             volumes={mangaData.volumes}
              onAddChapter={handleAddChapter}/>
              <ReviewForm 
              manga_id={mangaData.id} />

@@ -6,7 +6,6 @@ import Home from "./Home";
 import NavBar from "./NavBar";
 
 function App() {
-
   const [mangas, setMangas] = useState([]);
   const [sortBy, setSortBy] = useState('a-z');
   

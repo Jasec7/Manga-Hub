@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 
-function Chapter({ volume, onDelete, onUpdate }) {
+function Chapter({ chapter, onDelete, onUpdate }) {
   const [updateFields, setUpdateFields] = useState({
-    title: volume?.chapter?.title || "",
-    pages: volume?.chapter?.pages || "",
+    title: chapter?.title || "",
+    pages: chapter?.pages || "",
   });
 
   useEffect(() => {
-    if (volume?.chapter) {
+    if (chapter) {
       setUpdateFields({
-        title: volume.chapter.title,
-        pages: volume.chapter.pages,
+        title: chapter.title,
+        pages: chapter.pages,
       });
     }
-  }, [volume]);
+  }, [chapter]);
 
-  if (!volume || !volume.chapter) return null;
+  if (!chapter || !chapter.volume) return null;
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -28,36 +28,33 @@ function Chapter({ volume, onDelete, onUpdate }) {
   return (
     <div>
       <h3>
-        Chapter {volume.volume_number}: {volume.chapter.title}
+        Chapter {chapter.title}
       </h3>
-      <p>Pages: {volume.chapter.pages}</p>
+      <p>Pages: {chapter.pages}</p>
 
-      <input
-        type="text"
-        name="title"
-        value={updateFields.title}
-        onChange={handleChange}
+    <button onClick={() => onDelete(chapter.id)}>Delete</button>
+    <input
+      type="text"
+      name="title"
+      value={updateFields.title}
+      onChange={handleChange}
       />
-
       <input
-        type="number"
-        name="pages"
-        value={updateFields.pages}
-        onChange={handleChange}
+      type="number"
+      name="pages"
+      value={updateFields.pages}
+      onChange={handleChange}
       />
-
-      <button onClick={() => onDelete(volume.chapter.id)}>Delete</button>
-
-      <button
-        onClick={() =>
-          onUpdate(volume.chapter.id, {
-            title: updateFields.title,
-            pages: Number(updateFields.pages),
-          })
-        }
-      >
-        Save
-      </button>
+    <button
+      onClick={() =>
+        onUpdate(chapter.id, {
+        title: updateFields.title,
+        pages: Number(updateFields.pages),
+    })
+  }
+    >
+      Save
+    </button>
     </div>
   );
 }

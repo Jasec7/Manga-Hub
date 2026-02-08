@@ -5,21 +5,15 @@ import API_URL from "../api";
 const formSchema = yup.object().shape({
     title: yup.string().required("Must enter a title"),
     pages: yup.number().positive().integer().required("The number of pages is required"),
-    volume_number:
-      yup.number()
-      .required("it needs the chapter's number")
-      .typeError("Please enter an Integer")
-      .min(1),
-    edition: yup.string()
+    volume_id: yup.number().required("Pick a volume")
   });
 
-function ChapterForm({ manga_id, onAddChapter }) {
+function ChapterForm({volumes,manga_id,onAddChapter }) {
   const formik = useFormik({
     initialValues: {
       title: "",
       pages: "",
-      volume_number: "",
-      edition:""
+      volume_id:""
     },
     validateOnChange:false,
     validateOnBlur:false,
@@ -31,28 +25,17 @@ function ChapterForm({ manga_id, onAddChapter }) {
         body: JSON.stringify({
           title: values.title,
           pages: Number(values.pages),
+          manga_id: manga_id,
+          volume_id: Number(values.volume_id),
         }),
       })
         .then((r) => r.json())
         .then((newChapter) => {
-          return fetch("/volumes", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              manga_id: manga_id,
-              chapter_id: newChapter.id,
-              volume_number: Number(values.volume_number),
-              edition:values.edition
-            }),
-          });
+        onAddChapter(newChapter);
+        formik.resetForm();
         })
-        .then((r) =>r.json())
-        .then((newVolume) =>{onAddChapter(newVolume);
-              formik.resetForm()
-          });
-      }
-  });
-  
+    }
+  })  
 
   return (
     <div>
@@ -76,24 +59,18 @@ function ChapterForm({ manga_id, onAddChapter }) {
           onBlur={formik.handleBlur}
         />
         {formik.touched.pages && formik.errors.pages}
-        <input
-          type="number"
-          name="volume_number"
-          placeholder="Volume Number"
-          value={formik.values.volume_number}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        {formik.touched.volume_number && formik.errors.volume_number}
-        <input
-          type="text"
-          name="edition"
-          placeholder="Edition"
-          value={formik.values.edition}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        {formik.touched.edition && formik.errors.edition}
+        <select
+        name="volume_id"
+        value={formik.values.volume_id}
+        onChange={formik.handleChange}
+        >
+          <option value="">Select volume</option>
+          {volumes.map(v => (
+            <option key={v.id} value={v.id}>
+              Volume {v.volume_number} ({v.edition})
+            </option>
+          ))}
+          </select>
         <button type="submit">Add Chapter</button>
       </form>
     </div>

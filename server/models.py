@@ -18,7 +18,7 @@ class Manga(db.Model, SerializerMixin):
     chapters = db.relationship('Chapter', back_populates="manga", cascade="all, delete-orphan")
     reviews = db.relationship("Review", back_populates="manga",cascade="all, delete-orphan")
 
-    serialize_rules = ('-chapters.manga', '-reviews.manga' ,)
+    serialize_rules = ('-chapters.manga', '-reviews.manga','-volumes.mangas','-chapters.volume.mangas' ,)
 
     def __repr__(self):
         return f'<Manga {self.id}, {self.title}, {self.creator}, {self.release_year}> '
@@ -52,7 +52,7 @@ class Volume(db.Model, SerializerMixin):
     mangas = db.relationship("Manga", secondary='chapters', back_populates="volumes")
     chapters = db.relationship("Chapter", back_populates="volume", cascade="all, delete-orphan")
 
-    serialize_rules = ('-mangas.volumes', '-chapters.volume' ,)
+    serialize_rules = ('-mangas.volumes', '-chapters.volume','-chapters.manga.volumes' ,)
 
     def __repr__(self):
         return f'<Volume {self.id}, vol={self.volume_number}, edition={self.edition} '

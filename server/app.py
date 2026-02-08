@@ -167,10 +167,7 @@ class Chapters(Resource):
         if not volume:
             return {'error':'Volume not found'}, 404
 
-        duplicate = Chapter.query.filter_by(manga_id = data['manga_id'], volume_id = data['volume_id']).first()
-        if duplicate:
-            return {'error':'This chapter is already linked to this mangas'}, 409
-        
+       
         
         new_chapter = Chapter(
             title = data['title'],

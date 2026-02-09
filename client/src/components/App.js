@@ -42,6 +42,55 @@ function App() {
     setVolumes([...volumes, newVolume])
   };
 
+  /*function handleChapterAdded(mangaId, newChapter) {
+  setMangas((prevMangas) =>
+    prevMangas.map((manga) =>
+      manga.id === mangaId
+        ? { ...manga, chapters: [...(manga.chapters || []), newChapter] }
+        : manga
+    )
+  );
+}*/
+function handleChapterAdded(mangaId, newChapter) {
+  setMangas((prevMangas) => {
+    const updated = prevMangas.map((manga) =>
+      manga.id === mangaId
+        ? { ...manga, chapters: [...(manga.chapters || []), newChapter] }
+        : manga
+    );
+
+    console.log("UPDATED MANGAS:", updated.find(m => m.id === mangaId));
+    return updated;
+  });
+}
+function handleChapterUpdated(mangaId, updatedChapter) {
+  setMangas((prevMangas) =>
+    prevMangas.map((manga) =>
+      manga.id === mangaId
+        ? {
+            ...manga,
+            chapters: (manga.chapters || []).map((ch) =>
+              ch.id === updatedChapter.id ? updatedChapter : ch
+            ),
+          }
+        : manga
+    )
+  );
+}
+
+function handleChapterDeleted(mangaId, chapterId) {
+  setMangas((prevMangas) =>
+    prevMangas.map((manga) =>
+      manga.id === mangaId
+        ? {
+            ...manga,
+            chapters: manga.chapters.filter((ch) => ch.id !== chapterId),
+          }
+        : manga
+    )
+  );
+}
+
   return(
     <div>
     <NavBar/>
@@ -58,7 +107,10 @@ function App() {
 
       <Route path='/mangas/:id'>
         <MangaDetails mangas={mangas}
-        volumes={volumes}/>
+        volumes={volumes}
+        onChapterAdded={handleChapterAdded}
+        onChapterDeleted={handleChapterDeleted}
+         onChapterUpdated={handleChapterUpdated}/>
       </Route>
       <Route path='/volumes'>
         <VolumePage volumes={volumes}

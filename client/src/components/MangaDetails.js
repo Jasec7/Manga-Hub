@@ -9,66 +9,37 @@ import Chapter from "./Chapter";
 //import {useHistory} from "react-router-dom";
 //import API_URL from "../api";
 
-function MangaDetails({mangas, volumes}){
-    const [mangaData, setMangaData] = useState(null);
+function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChapterUpdated}){
     const [isToggle, setIstoggle] = useState(false);
     const [pickVolume, setPickVolume] = useState(null)
     const {id} = useParams();
+    const mangaId = Number(id);
+    const mangaData = mangas.find((manga) => manga.id === mangaId);
     
-    useEffect(() => {
-    const mangaId = parseInt(id, 10);
-    const findManga = mangas.find((manga) => manga.id === mangaId)
+    if(!mangaData) return null;
 
-    if (findManga){
-        setMangaData(findManga);
-        setPickVolume(null);
+
+    const handleAddChapter = (newChapter) => {onChapterAdded(mangaData.id, newChapter);
+        setPickVolume({ id: Number(newChapter.volume_id) });
+};
+
+    const handleChapterDelete = (id) => {
+        fetch(`/chapters/${id}`, { method: "DELETE" }).then((r) => {
+            if (r.ok) {
+                onChapterDeleted(mangaData.id, id);
+                setPickVolume(null);
+            }
+        });
     }
-}, [mangas, id])
-
-    if(!mangaData || !mangaData.volumes){
-        return null;
-    };
-    
-    console.log(mangaData)
-
-    const handleAddChapter = (newChapter) => {
-    setMangaData((prev) => ({
-        ...prev,
-        chapters: [...prev.chapters, newChapter],
-    }));
-    setPickVolume({ id: newChapter.volume_id });
-};
-
-    const handleChapterDelete = (id) =>{
-    fetch(`/chapters/${id}`,{
-        method:"DELETE"
-    }).then((r) =>{
-      if(r.ok){
-        setMangaData((prev) => ({...prev,
-             chapters: prev.chapters.filter((chapter) => chapter.id !== id),
-         }))
-         setPickVolume(null);
-       }
-    });
-};
-
     const handleUpdateChapter = (id, updatedFields) => {
-        console.log("pickVolume", pickVolume);
         fetch(`/chapters/${id}`, {
-         method: "PATCH",
-         headers:{
-            "Content-Type": "application/json"
-         },
-         body: JSON.stringify(updatedFields),
-       })
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedFields),
+        })
         .then((r) => r.json())
         .then((updatedChapter) => {
-            setMangaData((prev) => ({
-                ...prev,
-                chapters: prev.chapters.map((ch) =>
-                    ch.id === id ? updatedChapter : ch
-            ),
-        }));
+        onChapterUpdated(mangaData.id, updatedChapter);
     });
 };
     function handleToggle(){
@@ -87,14 +58,13 @@ function MangaDetails({mangas, volumes}){
             {mangaData.volumes?.map((volume) => (
                 <div className="volume card"
                 key={volume.id}
-                onClick={() => setPickVolume(volume)}
-                style={{ cursor: "pointer" }}>
+                onClick={() => setPickVolume(volume)}>
                     <h4>
                         Volume {volume.volume_number} {volume.edition}
                     </h4>
                  </div>
             ))}
-            {mangaData.chapters?.filter((chapter) => chapter.volume_id === pickVolume?.id).map((chapter)=>(
+            {mangaData.chapters?.filter((chapter) => Number(chapter.volume_id) === Number(pickVolume?.id)).map((chapter)=>(
             <Chapter
               key={chapter.id}
               chapter={chapter}

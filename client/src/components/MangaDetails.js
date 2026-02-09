@@ -64,14 +64,17 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
                     </h4>
                  </div>
             ))}
-            {mangaData.chapters?.filter((chapter) => Number(chapter.volume_id) === Number(pickVolume?.id)).map((chapter)=>(
+            {mangaData.chapters?.filter((chapter) => {
+            if (!pickVolume) return true;
+            const chapterVolumeId = chapter.volume.id || chapter.volume?.id;
+            return Number(chapterVolumeId) === Number(pickVolume.id);})
+            .map((chapter) => (
             <Chapter
-              key={chapter.id}
-              chapter={chapter}
-              onDelete={handleChapterDelete}
-              onUpdate={handleUpdateChapter}
-              volumes={volumes}
-             />
+            key={chapter.id}
+            chapter={chapter}
+            onDelete={handleChapterDelete}
+            onUpdate={handleUpdateChapter}
+            volumes={volumes}/>
             ))}
             <p>Reviews: ({mangaData.reviews.length})</p>
             <button onClick={handleToggle}>

@@ -15,7 +15,7 @@ function Chapter({ chapter, volumes, onDelete, onUpdate }) {
     }
   }, [chapter]);
 
-  if (!chapter || !chapter.volume) return null;
+  if (!chapter) return null;
 
   function handleChange(e) {
     const { name, value } = e.target;

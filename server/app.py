@@ -142,7 +142,7 @@ class ReviewsId(Resource):
 
 class Chapters(Resource):
     def get(self):
-        chapters = [chapter.to_dict(only=('id','title','pages')) for chapter in Chapter.query.all()]
+        chapters = [chapter.to_dict(rules=('-manga',)) for chapter in Chapter.query.all()]
         return make_response(chapters, 200)
     
     def post(self):
@@ -178,7 +178,7 @@ class Chapters(Resource):
         db.session.add(new_chapter)
         db.session.commit()
         
-        return make_response(new_chapter.to_dict(), 201)
+        return make_response(new_chapter.to_dict(rules=('-manga',)),201)
     
 class ChaptersId(Resource):
     def get(self, id):

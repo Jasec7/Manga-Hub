@@ -37,7 +37,7 @@ class Chapter(db.Model, SerializerMixin):
     volume = db.relationship("Volume", back_populates="chapters")
     
 
-    serialize_rules = ('-manga.chapters', '-volume.chapters' ,)
+    serialize_rules = ('-manga.chapters','-volume.chapters')
 
     def __repr__(self):
         return f'<Chapter {self.id}, {self.title}, {self.pages}, {self.manga.title}, {self.volume.volume_number}> '

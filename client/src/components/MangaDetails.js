@@ -9,7 +9,7 @@ import Chapter from "./Chapter";
 //import {useHistory} from "react-router-dom";
 //import API_URL from "../api";
 
-function MangaDetails({mangas}){
+function MangaDetails({mangas, volumes}){
     const [mangaData, setMangaData] = useState(null);
     const [isToggle, setIstoggle] = useState(false);
     const [pickVolume, setPickVolume] = useState(null)
@@ -35,7 +35,8 @@ function MangaDetails({mangas}){
     setMangaData((prev) => ({
         ...prev,
         chapters: [...prev.chapters, newChapter],
-  }));
+    }));
+    setPickVolume({ id: newChapter.volume_id });
 };
 
     const handleChapterDelete = (id) =>{
@@ -52,6 +53,7 @@ function MangaDetails({mangas}){
 };
 
     const handleUpdateChapter = (id, updatedFields) => {
+        console.log("pickVolume", pickVolume);
         fetch(`/chapters/${id}`, {
          method: "PATCH",
          headers:{
@@ -92,12 +94,13 @@ function MangaDetails({mangas}){
                     </h4>
                  </div>
             ))}
-            {mangaData.chapters?.filter((chapter) => chapter.volume.id === pickVolume?.id).map((chapter)=>(
+            {mangaData.chapters?.filter((chapter) => chapter.volume_id === pickVolume?.id).map((chapter)=>(
             <Chapter
               key={chapter.id}
               chapter={chapter}
               onDelete={handleChapterDelete}
               onUpdate={handleUpdateChapter}
+              volumes={volumes}
              />
             ))}
             <p>Reviews: ({mangaData.reviews.length})</p>
@@ -114,7 +117,7 @@ function MangaDetails({mangas}){
              )))}
              <ChapterForm 
              manga_id={mangaData.id}
-             volumes={mangaData.volumes}
+             volumes={volumes}
              onAddChapter={handleAddChapter}/>
              <ReviewForm 
              manga_id={mangaData.id} />

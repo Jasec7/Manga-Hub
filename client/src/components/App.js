@@ -2,12 +2,13 @@ import { Switch, Route } from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import MangaPage from "./MangaPage";
 import MangaDetails from "./MangaDetails";
+import VolumePage from "./VolumePage";
 import Home from "./Home";
 import NavBar from "./NavBar";
 
 function App() {
   const [mangas, setMangas] = useState([]);
-  const [sortBy, setSortBy] = useState('a-z');
+  const [volumes, setVolumes] = useState([]);
   
   
   useEffect(() =>{
@@ -30,15 +31,16 @@ function App() {
         }
       });
   };
-  
-  const sortMangas = [...mangas].sort((a,b) =>{
-      if(sortBy === 'a-z'){
-          return a.title.localeCompare(b.title);
-      } else if(sortBy === 'z-a'){
-          return b.title.localeCompare(a.title)
-      }
-          return 0;
-  })
+
+  useEffect(() => {
+    fetch("/volumes")
+    .then((r) => r.json())
+    .then(volumes => setVolumes(volumes))
+  },[])
+
+  function handleAddVolume(newVolume){
+    setVolumes([...volumes, newVolume])
+  };
 
   return(
     <div>
@@ -50,12 +52,17 @@ function App() {
 
       <Route exact path='/mangas'>
         <MangaPage onAddMangas={handleAddManga}
-        mangas={sortMangas} 
+        mangas={mangas} 
         onDelete={handleMangaDelete}/>
       </Route>
 
       <Route path='/mangas/:id'>
-        <MangaDetails mangas={mangas}/>
+        <MangaDetails mangas={mangas}
+        volumes={volumes}/>
+      </Route>
+      <Route path='/volumes'>
+        <VolumePage volumes={volumes}
+        onAddVolumes={handleAddVolume}/>
       </Route>
     </Switch>
     </div>

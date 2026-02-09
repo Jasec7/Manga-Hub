@@ -16,6 +16,12 @@ function NavBar(){
             >
                 Mangas
             </NavLink>
+            <NavLink
+            exact to='/volumes'
+            className='nav-link'
+            >
+                Volumes
+            </NavLink>
         </nav>
     )
 };

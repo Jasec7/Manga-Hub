@@ -19,9 +19,7 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
     if(!mangaData) return null;
 
 
-    const handleAddChapter = (newChapter) => {onChapterAdded(mangaData.id, newChapter);
-        setPickVolume({ id: Number(newChapter.volume_id) });
-};
+    const handleAddChapter = (newChapter) => {onChapterAdded(mangaData.id, newChapter)};
 
     const handleChapterDelete = (id) => {
         fetch(`/chapters/${id}`, { method: "DELETE" }).then((r) => {
@@ -62,25 +60,24 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
                     <h4>
                         Volume {volume.volume_number} {volume.edition}
                     </h4>
-                 </div>
+
+            {volume.chapters
+                ?.filter((ch) => ch.manga_id === mangaData.id).map((chapter) => (
+                <Chapter
+                key={chapter.id}
+                chapter={chapter}
+                onDelete={handleChapterDelete}
+                onUpdate={handleUpdateChapter}
+                />
             ))}
-            {mangaData.chapters?.filter((chapter) => {
-            if (!pickVolume) return true;
-            const chapterVolumeId = chapter.volume.id || chapter.volume?.id;
-            return Number(chapterVolumeId) === Number(pickVolume.id);})
-            .map((chapter) => (
-            <Chapter
-            key={chapter.id}
-            chapter={chapter}
-            onDelete={handleChapterDelete}
-            onUpdate={handleUpdateChapter}
-            volumes={volumes}/>
-            ))}
-            <p>Reviews: ({mangaData.reviews.length})</p>
+               </div>
+        ))}
+
+            <p>Reviews: ({mangaData.reviews?.length || 0})</p>
             <button onClick={handleToggle}>
                 {isToggle ? 'Hide review' : 'Show review'}
             </button>
-             {isToggle &&(mangaData.reviews.map((review) =>(
+             {isToggle &&(mangaData.reviews?.map((review) =>(
                 <Review key ={review.id}
                 id={review.id}
                 reviewer={review.reviewer}

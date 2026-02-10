@@ -53,16 +53,31 @@ function App() {
 }*/
 function handleChapterAdded(mangaId, newChapter) {
   setMangas((prevMangas) => {
-    const updated = prevMangas.map((manga) =>
-      manga.id === mangaId
-        ? { ...manga, chapters: [...(manga.chapters || []), newChapter] }
-        : manga
-    );
+    return prevMangas.map((manga) => {
+      if (manga.id !== mangaId) {
+        return manga;
+      }
 
-    console.log("UPDATED MANGAS:", updated.find(m => m.id === mangaId));
-    return updated;
+      const volumeId = Number(newChapter.volume_id);
+
+      const updatedVolumes = manga.volumes.map((volume) => {
+        if (volume.id !== volumeId) {
+          return volume;
+        }
+
+        return {
+          ...volume,
+          chapters: [...volume.chapters, newChapter],
+        };
+      });
+
+      return {
+        ...manga,
+        volumes: updatedVolumes,
+      };
+    });
   });
-}
+};
 function handleChapterUpdated(mangaId, updatedChapter) {
   setMangas((prevMangas) =>
     prevMangas.map((manga) =>

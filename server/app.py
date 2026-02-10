@@ -12,7 +12,7 @@ def index():
 
 class Mangas(Resource):
     def get(self):
-        mangas = [manga.to_dict(only=('id','title','creator','release_year','volumes',)) for manga in Manga.query.all()]
+        mangas = [manga.to_dict(only=('id','title','creator','release_year','image_url','volumes',)) for manga in Manga.query.all()]
 
         return make_response(mangas, 200)
 

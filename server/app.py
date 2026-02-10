@@ -12,7 +12,7 @@ def index():
 
 class Mangas(Resource):
     def get(self):
-        mangas = [manga.to_dict() for manga in Manga.query.all()]
+        mangas = [manga.to_dict(only=('id','title','creator','release_year','volumes',)) for manga in Manga.query.all()]
 
         return make_response(mangas, 200)
 
@@ -41,7 +41,7 @@ class Mangas(Resource):
         return make_response(new_manga.to_dict(), 201 )
 
 
-class MangaId(Resource):
+'''class MangaId(Resource):
     def get(self, id):
         manga = Manga.query.filter_by(id = id).first()
 
@@ -59,7 +59,7 @@ class MangaId(Resource):
         db.session.delete(manga)
         db.session.commit()
 
-        return make_response("", 204)
+        return make_response("", 204)'''
 
 class Reviews(Resource):
     def get(self):
@@ -141,9 +141,9 @@ class ReviewsId(Resource):
         return make_response("", 204)
 
 class Chapters(Resource):
-    def get(self):
+    '''def get(self):
         chapters = [chapter.to_dict(rules=('-manga',)) for chapter in Chapter.query.all()]
-        return make_response(chapters, 200)
+        return make_response(chapters, 200)'''
     
     def post(self):
         data = request.get_json()
@@ -181,12 +181,12 @@ class Chapters(Resource):
         return make_response(new_chapter.to_dict(rules=('-manga',)),201)
     
 class ChaptersId(Resource):
-    def get(self, id):
+    '''def get(self, id):
         chapter = Chapter.query.filter_by(id=id).first()
         if not chapter:
             return {'error':'Chapter not found'}, 404
         
-        return make_response(chapter.to_dict(), 200)
+        return make_response(chapter.to_dict(), 200)'''
     
     def patch(self, id):
         chapter = Chapter.query.filter_by(id=id).first()
@@ -223,7 +223,7 @@ class ChaptersId(Resource):
     
 class Volumes(Resource):
     def get(self):
-        volumes = [volume.to_dict() for volume in Volume.query.all()]
+        volumes = [volume.to_dict(only=('id','volume_number','edition',)) for volume in Volume.query.all()]
         return make_response(volumes, 200)
     
     def post(self):
@@ -246,7 +246,7 @@ class Volumes(Resource):
 
         return make_response(new_volume.to_dict(), 201)
         
-class VolumeId(Resource):
+'''class VolumeId(Resource):
     def get(self, id):
         volume = Volume.query.filter_by(id=id).first()
 
@@ -264,15 +264,16 @@ class VolumeId(Resource):
         db.session.commit()
 
         return make_response("", 204)
+        '''
     
 api.add_resource(Mangas,'/mangas')
-api.add_resource(MangaId,'/mangas/<int:id>')
+#api.add_resource(MangaId,'/mangas/<int:id>')
 api.add_resource(Reviews,'/reviews')
 api.add_resource(ReviewsId,'/reviews/<int:id>')
 api.add_resource(Chapters,'/chapters')
 api.add_resource(ChaptersId,'/chapters/<int:id>')
 api.add_resource(Volumes,'/volumes')
-api.add_resource(VolumeId,'/volumes/<int:id>')
+#api.add_resource(VolumeId,'/volumes/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

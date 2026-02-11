@@ -1,6 +1,6 @@
 
 import { useParams } from "react-router-dom";
-import React, { useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Review from "./Review";
 import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
@@ -19,18 +19,22 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
     if(!mangaData) return null;
 
 
-    const handleAddChapter = (newChapter) => {onChapterAdded(mangaData.id, newChapter)};
+    const handleAddChapter = (newChapter) => {
+        console.log("NEW CHAPTER:", newChapter);
+        onChapterAdded(mangaData.id, newChapter)};
 
     const handleChapterDelete = (id) => {
         fetch(`/chapters/${id}`, { method: "DELETE" }).then((r) => {
             if (r.ok) {
                 onChapterDeleted(mangaData.id, id);
                 setPickVolume(null);
+                
             }
         });
     }
     const handleUpdateChapter = (id, updatedFields) => {
-        fetch(`/chapters/${id}`, {
+        
+        fetch(`/chapters/${id}`,{
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedFields),
@@ -38,6 +42,7 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
         .then((r) => r.json())
         .then((updatedChapter) => {
         onChapterUpdated(mangaData.id, updatedChapter);
+        console.log(updatedChapter)
     });
 };
     function handleToggle(){
@@ -57,9 +62,9 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
                 <div className="volume card"
                 key={volume.id}
                 onClick={() => setPickVolume(volume)}>
-                    <h4>
+                    <h3>
                         Volume {volume.volume_number} {volume.edition}
-                    </h4>
+                    </h3>
 
             {volume.chapters
                 ?.filter((ch) => ch.manga_id === mangaData.id).map((chapter) => (

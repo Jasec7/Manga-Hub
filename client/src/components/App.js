@@ -42,23 +42,57 @@ function App() {
     setVolumes([...volumes, newVolume])
   };
 
-  /*function handleChapterAdded(mangaId, newChapter) {
-  setMangas((prevMangas) =>
-    prevMangas.map((manga) =>
-      manga.id === mangaId
-        ? { ...manga, chapters: [...(manga.chapters || []), newChapter] }
-        : manga
-    )
-  );
-}*/
+ 
 function handleChapterAdded(mangaId, newChapter) {
+  setMangas((prevMangas) => {
+    return prevMangas.map((manga) => {
+      if (manga.id !== mangaId) return manga;
+
+      const volumeId = Number(newChapter.volume_id || newChapter.volume?.id);
+
+      let volumeFound = false;
+
+      const updatedVolumes = manga.volumes.map((volume) => {
+        if (volume.id !== volumeId) return volume;
+
+        volumeFound = true;
+
+        return {
+          ...volume,
+          chapters: [...(volume.chapters || []), newChapter],
+        };
+      });
+
+      if (!volumeFound) {
+        const newVolume = {
+          id: volumeId,
+          volume_number: newChapter.volume?.volume_number || "New Volume",
+          edition: newChapter.volume?.edition || "",
+          chapters: [newChapter],
+        };
+
+        return {
+          ...manga,
+          volumes: [...updatedVolumes, newVolume],
+        };
+      }
+
+      return {
+        ...manga,
+        volumes: updatedVolumes,
+      };
+    });
+  });
+}
+
+function handleChapterUpdated(mangaId, updatedChapter) {
   setMangas((prevMangas) => {
     return prevMangas.map((manga) => {
       if (manga.id !== mangaId) {
         return manga;
       }
 
-      const volumeId = Number(newChapter.volume_id);
+      const volumeId = Number(updatedChapter.volume_id);
 
       const updatedVolumes = manga.volumes.map((volume) => {
         if (volume.id !== volumeId) {
@@ -67,7 +101,9 @@ function handleChapterAdded(mangaId, newChapter) {
 
         return {
           ...volume,
-          chapters: [...volume.chapters, newChapter],
+          chapters: volume.chapters.map((chapter) =>
+            chapter.id === updatedChapter.id ? updatedChapter : chapter
+          ),
         };
       });
 
@@ -77,33 +113,28 @@ function handleChapterAdded(mangaId, newChapter) {
       };
     });
   });
-};
-function handleChapterUpdated(mangaId, updatedChapter) {
-  setMangas((prevMangas) =>
-    prevMangas.map((manga) =>
-      manga.id === mangaId
-        ? {
-            ...manga,
-            chapters: (manga.chapters || []).map((ch) =>
-              ch.id === updatedChapter.id ? updatedChapter : ch
-            ),
-          }
-        : manga
-    )
-  );
 }
 
 function handleChapterDeleted(mangaId, chapterId) {
-  setMangas((prevMangas) =>
-    prevMangas.map((manga) =>
-      manga.id === mangaId
-        ? {
-            ...manga,
-            chapters: manga.chapters.filter((ch) => ch.id !== chapterId),
-          }
-        : manga
-    )
-  );
+  setMangas((prevMangas) => {
+    return prevMangas.map((manga) => {
+      if (manga.id !== mangaId) return manga;
+
+      const updatedVolumes = manga.volumes
+        .map((volume) => ({
+          ...volume,
+          chapters: (volume.chapters || []).filter(
+            (chapter) => chapter.id !== chapterId
+          ),
+        }))
+        .filter((volume) => volume.chapters.length > 0);
+
+      return {
+        ...manga,
+        volumes: updatedVolumes,
+      };
+    });
+  });
 }
 
   return(

@@ -45,3 +45,20 @@ body {
 
 }
 
+.volume h3 {
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.volume:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.volume.active h3 {
+  color: purple;
+  text-shadow: 0 0 8px rgba(168,085, 247, 0.7);
+}
+
+.volume.active {
+  transform: none;
+}
+

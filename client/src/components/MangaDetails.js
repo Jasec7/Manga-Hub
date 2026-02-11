@@ -11,7 +11,7 @@ import Chapter from "./Chapter";
 
 function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChapterUpdated}){
     const [isToggle, setIstoggle] = useState(false);
-    const [pickVolume, setPickVolume] = useState(null)
+    const [viewVolume, setViewVolume] = useState(null)
     const {id} = useParams();
     const mangaId = Number(id);
     const mangaData = mangas.find((manga) => manga.id === mangaId);
@@ -26,9 +26,7 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
     const handleChapterDelete = (id) => {
         fetch(`/chapters/${id}`, { method: "DELETE" }).then((r) => {
             if (r.ok) {
-                onChapterDeleted(mangaData.id, id);
-                setPickVolume(null);
-                
+                onChapterDeleted(mangaData.id, id); 
             }
         });
     }
@@ -59,14 +57,12 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
 
             <hr/>
             {mangaData.volumes?.map((volume) => (
-                <div className="volume card"
-                key={volume.id}
-                onClick={() => setPickVolume(volume)}>
-                    <h3>
+                <div className={`volume card ${viewVolume === volume.id ? "active" : ""}`}>
+                    <h3 onClick={() =>setViewVolume(viewVolume === volume.id ? null : volume.id)}>
                         Volume {volume.volume_number} {volume.edition}
                     </h3>
 
-            {volume.chapters
+            {viewVolume === volume.id && (volume.chapters
                 ?.filter((ch) => ch.manga_id === mangaData.id).map((chapter) => (
                 <Chapter
                 key={chapter.id}
@@ -74,7 +70,7 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
                 onDelete={handleChapterDelete}
                 onUpdate={handleUpdateChapter}
                 />
-            ))}
+            )))}
                </div>
         ))}
 

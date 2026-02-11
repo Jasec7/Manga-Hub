@@ -57,7 +57,8 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
 
             <hr/>
             {mangaData.volumes?.map((volume) => (
-                <div className={`volume card ${viewVolume === volume.id ? "active" : ""}`}>
+                <div key ={volume.id}
+                className={`volume card ${viewVolume === volume.id ? "active" : ""}`}>
                     <h3 onClick={() =>setViewVolume(viewVolume === volume.id ? null : volume.id)}>
                         Volume {volume.volume_number} {volume.edition}
                     </h3>

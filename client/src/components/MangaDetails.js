@@ -6,7 +6,6 @@ import ReviewForm from "./ReviewForm";
 import ChapterForm from "./ChapterForm";
 import Chapter from "./Chapter";
 
-//import {useHistory} from "react-router-dom";
 //import API_URL from "../api";
 
 function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChapterUpdated}){
@@ -20,7 +19,7 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
 
 
     const handleAddChapter = (newChapter) => {
-        console.log("NEW CHAPTER:", newChapter);
+        
         onChapterAdded(mangaData.id, newChapter)};
 
     const handleChapterDelete = (id) => {
@@ -40,7 +39,6 @@ function MangaDetails({mangas, volumes, onChapterAdded, onChapterDeleted, onChap
         .then((r) => r.json())
         .then((updatedChapter) => {
         onChapterUpdated(mangaData.id, updatedChapter);
-        console.log(updatedChapter)
     });
 };
     function handleToggle(){

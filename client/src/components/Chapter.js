@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function Chapter({ chapter, volumes, onDelete, onUpdate }) {
+function Chapter({ chapter, onDelete, onUpdate }) {
   const [updateFields, setUpdateFields] = useState({
     title: chapter?.title || "",
     pages: chapter?.pages || "",

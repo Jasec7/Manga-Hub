@@ -22,7 +22,7 @@ function App() {
   };
   
    const handleMangaDelete = (id) =>{
-      fetch(`/mangas/${id}`,{
+      fetch( `/mangas/${id}`,{
           method:"DELETE"
       }).then((r) =>{
         if(r.ok){
